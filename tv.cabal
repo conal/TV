@@ -1,0 +1,32 @@
+name:                tv
+version:             0.0
+description:
+  TV is library for interactive visualization of functional values.  It
+  can also be thought of as an approach to functional GUIs.  Currently, TV
+  is a stage between Phooey (<http://conal.net/phooey>) and Eros
+  (<http://conal.net/papers/Eros>).
+  .
+  If you just want to /use/ TV, see the main module below
+  ("Graphics.UI.TV").  The other modules (@UI.Graphics.TV.*@) are useful
+  for understanding the implementation and adding new features.
+  .
+  See <http://conal.net/tv> for more info.
+  .
+  &#169; 2006 by Conal Elliott; BSD3 license.
+copyright:           (c) 2006 by Conal Elliott
+license:             BSD3
+author:              Conal Elliott 
+maintainer:          conal@conal.net
+hs-source-dirs:      src
+build-depends:       base, phooey
+exposed-modules:     Graphics.UI.TV
+                     Graphics.UI.TV.Input
+                     Graphics.UI.TV.Output
+                     Graphics.UI.TV.FromOutput
+
+-- haddock doesn't know arrow notation  :(
+-- other-modules:
+--                      Examples
+
+-- Optimize later
+-- ghc-options:         -O

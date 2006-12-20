@@ -1,0 +1,21 @@
+TV is a library for visualizing functional values.  It can also be viewed
+as an approach to functional user interfaces.  It is implemented very
+simply on top of Phooey (http://conal.net/phooey).  The name "TV" comes
+"tangible values", which is the central idea of the library.
+
+TV is an intermediate stage between Phooey and Eros
+(http://conal.net/papers/Eros).
+
+See tv.cabal for more info, including home page and license.
+
+You can configure, build, generate haddock docs, and install all in the usual
+way with Cabal commands.
+
+  runhaskell Setup.lhs configure
+  runhaskell Setup.lhs build
+  runhaskell Setup.lhs haddock
+  runhaskell Setup.lhs install
+
+You can also find the Haddock-generated documentation at 
+
+  http://darcs.haskell.org/packages/tv/doc
