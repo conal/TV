@@ -12,7 +12,4 @@ haddock_args=\
   --haddock-arg=--read-interface=http://darcs.haskell.org/packages/DeepArrow/doc/html,c:/Haskell/packages/DeepArrow-0.0/doc/html/DeepArrow.haddock \
   # enough, already!
 
-#   --haddock-arg=--read-interface=http://darcs.haskell.org/packages/monadLib/doc,c:/Haskell/packages/monadLib-3.1.0/doc/html/monadLib.haddock \
-
-
 include ../my-cabal-make.inc
