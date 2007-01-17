@@ -1,0 +1,19 @@
+Version 0.0:
+
+* Support for Kleisli arrows and IO in particular.
+
+* Grading examples.  I'm very happy with them.
+
+* Added ICompose & OCompose, and used for Functor & Cofunctor instances.  Now
+  I have to figure out what the Eros composition operators do with these
+  constructors.
+
+* Used fmap/cofmap to define a Read&Show version of interact.
+
+* Made prompts/titles an orthogonal feature (as in Phooey).  Now one can
+  title an aggregate.  Required adding constructors to Input & Output.
+  Figure out Eros operators.
+
+---- darcs record
+
+* Created

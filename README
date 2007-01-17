@@ -13,9 +13,11 @@ way with Cabal commands.
 
   runhaskell Setup.lhs configure
   runhaskell Setup.lhs build
-  runhaskell Setup.lhs haddock
   runhaskell Setup.lhs install
 
-You can also find the Haddock-generated documentation at 
+You can find the Haddock-generated documentation at 
 
-  http://darcs.haskell.org/packages/tv/doc
+  http://darcs.haskell.org/packages/TV/doc/html
+
+Or you can generate them locally with "make colourPrep hscolour haddock".
+There are a few other tricky bits in the Makefile you probably won't need.
