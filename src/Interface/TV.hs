@@ -38,6 +38,7 @@ import Graphics.UI.Phooey (UI)
 
 import Interface.TV.Input
 import Interface.TV.Output
+import Interface.TV.OFun ()
 import Interface.TV.Common
 import Interface.TV.Defaults
 import Interface.TV.UI

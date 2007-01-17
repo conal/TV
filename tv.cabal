@@ -49,4 +49,3 @@ Extra-Source-Files:
                      Interface.TV.DefaultsList
                      Examples
 ghc-options:         -O
-
