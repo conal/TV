@@ -1,5 +1,3 @@
-To do: redo interactRSOut with wrapO
-
 Version 0.1:
 
 * Removed iEmpty & iEmpty and corresponding constructors. Generate dynamic
@@ -10,6 +8,9 @@ Version 0.1:
   DeepArrow algebra with OCompose.
 * Added wrapO and wrapAO, sort of analogous (or dual) to wrapF.  I'm not
   sure the name is a great choice.  I've also considered "unwrapO".
+* Added readShow, defined via wrapO.
+* Redefined interactRSOut via readShow and renamed "interactLineRS".
+  Added "interactRS".
 * Added fromFile & toFile TV functions.
 * Added fileOut 
 * Moved Grading example from src/Examples.hs to src/Grading.hs

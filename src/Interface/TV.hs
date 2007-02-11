@@ -23,7 +23,8 @@ module Interface.TV
   , OFun, wrapO, wrapAO
   -- * Common ins & outs
   , Common, CInput, COutput
-  , stringIn, readIn{-, intIn-}, stringOut, showOut, interactLine, interactRSOut
+  , stringIn, readIn{-, intIn-}, stringOut, showOut, interactLine
+  , readShow, interactLineRS
   -- * Default ins & outs
   , DefaultIn(..), DefaultOut(..)
   -- * Kleisli arrows

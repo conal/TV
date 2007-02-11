@@ -20,13 +20,14 @@ module Interface.TV.Common
   -- * Inputs
   , stringIn, boolIn, readIn  -- , intIn
   -- * Outputs
-  , stringOut, boolOut, showOut, interactLine, interactRSOut
+  , stringOut, boolOut, showOut, interactLine, readShow, interactLineRS
   ) where
 
 import Control.Arrow
 
 import Interface.TV.Input
 import Interface.TV.Output
+import Interface.TV.OFun (wrapO)
 import Interface.TV.Tangible (TV)
 
 import Interface.TV.Misc (readD,Cofunctor(..))
@@ -103,11 +104,19 @@ showOut = cofmap show stringOut
 interactLine :: COutput (String -> String)
 interactLine = oLambda stringIn stringOut
 
--- | Read+Show of 'interact'
-interactRSOut :: (Read a, Show b)
-  => a     -- ^ default, if read fails
-  -> COutput (a -> b)
-interactRSOut dflt = oLambda (readIn dflt) showOut
+-- | Handy Read+Show wrapper
+readShow :: (Read a, Show b)
+         => COutput (String->String)    -- ^ base output
+         -> a                           -- ^ default, when read fails
+         -> COutput (a -> b)
+readShow o dflt = wrapO show (readD dflt) o
 
--- The following definition is more elegant but loses the oLambda structure.
--- cofmap (wrapF show (readD dflt)) interactLine
+-- | Read+Show of 'interactLine'
+interactLineRS :: (Read a, Show b)
+               => a                     -- ^ default, if read fails
+               -> COutput (a -> b)
+interactLineRS = readShow interactLine
+
+-- Equivalently:
+--  interactLineRS dflt = wrapO show (readD dflt) interactLine
+--  interactLineRS dflt = oLambda (readIn dflt) showOut

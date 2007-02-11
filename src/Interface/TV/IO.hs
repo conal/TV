@@ -90,6 +90,12 @@ fileIn name = kIn (readFile name)
 interactOut :: Output KIO (String -> String)
 interactOut = oLambda contentsIn stringOut
 
+-- | Read+Show of 'interact'
+interactRS :: (Read a, Show b)
+           => a                         -- ^ default, if read fails
+           -> COutput (a -> b)
+interactRS = readShow interactOut
+
 -- | 'Output' version of 'writeFile'
 fileOut :: FilePath -> Output KIO String
 fileOut name = kOut (writeFile name)

@@ -70,7 +70,7 @@ shoppingPrU = uncurryA $$ shoppingU
 -- "runBoth (sortT :: CTV ([String] -> [String]))".  If you leave out the type
 -- annotation, a will default to Int.
 sortT :: (Read a, Show a, Ord a) => CTV ([a] -> [a])
-sortT = tv (oTitle "sort" $ interactRSOut []) sort
+sortT = tv (oTitle "sort" $ interactLineRS []) sort
 
 
 ---- Composition.
