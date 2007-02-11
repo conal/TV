@@ -29,7 +29,7 @@ import Interface.TV.Input
 import Interface.TV.Output
 import Interface.TV.Tangible (TV)
 
-import Interface.TV.Misc (readD)
+import Interface.TV.Misc (readD,Cofunctor(..))
 
 -- | This class captures some useful operations available in some arrows
 -- and allows definition of some \"'Common'\" 'Input's, 'Output's, and
@@ -71,7 +71,8 @@ stringIn :: CInput String
 stringIn = iPrim getString
 
 -- | Bool input
-boolIn :: Bool -> CInput Bool
+boolIn :: Bool                          -- ^ default
+       -> CInput Bool
 boolIn dflt = iPrim (getBool dflt)
 
 -- -- | Int input, with default and bounds
@@ -79,8 +80,9 @@ boolIn dflt = iPrim (getBool dflt)
 -- intIn dflt bounds = iPrim (getInt dflt bounds)
 
 -- | Input a readable value.  Use default when read fails.
-readIn :: Read a => a -> CInput a
-readIn dflt = stringIn `iCompose` pure (readD dflt)
+readIn :: Read a => a                   -- ^ default
+       -> CInput a
+readIn dflt = fmap (readD dflt) stringIn
 
 
 -- | Output a string
@@ -93,7 +95,7 @@ boolOut = oPrim putBool
 
 -- | Output a showable value
 showOut :: Show a => COutput a
-showOut = pure show `oCompose` stringOut
+showOut = cofmap show stringOut
 
 -- | 'Output' version of 'interact'.  Well, not quite, since the IO
 -- version uses 'getLine' instead of 'getContents'.  See also
@@ -102,7 +104,9 @@ interactLine :: COutput (String -> String)
 interactLine = oLambda stringIn stringOut
 
 -- | Read+Show of 'interact'
-interactRSOut :: (Read a, Show b) => a -> COutput (a -> b)
+interactRSOut :: (Read a, Show b)
+  => a     -- ^ default, if read fails
+  -> COutput (a -> b)
 interactRSOut dflt = oLambda (readIn dflt) showOut
 
 -- The following definition is more elegant but loses the oLambda structure.

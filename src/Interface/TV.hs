@@ -16,9 +16,11 @@ module Interface.TV
   -- * Tangible values
    TV, CTV, tv, unTv, runTV
   -- * 'Input'
-  , Input, iEmpty, iPrim, iPair, iTitle
+  , Input{-, iEmpty-}, iPrim, iPair, iTitle
   -- * 'Output'
-  , Output, oEmpty, oPrim, oLambda, oPair, oCompose, oTitle
+  , Output{-, oEmpty-}, oPrim, oLambda, oPair, oCompose, oTitle
+  -- * 'Output' transformers
+  , OFun, wrapO, wrapAO
   -- * Common ins & outs
   , Common, CInput, COutput
   , stringIn, readIn{-, intIn-}, stringOut, showOut, interactLine, interactRSOut
@@ -27,7 +29,7 @@ module Interface.TV
   -- * Kleisli arrows
   , kIn, kOut
   -- ** IO-based
-  , KIO, contentsIn, fileIn, interactOut, runIO
+  , KIO, contentsIn, fileIn, interactOut, fileOut, fromFile, toFile, runIO
   -- * UI
   , UI, islider, runUI
   -- * Misc
@@ -38,7 +40,7 @@ import Graphics.UI.Phooey (UI)
 
 import Interface.TV.Input
 import Interface.TV.Output
-import Interface.TV.OFun ()
+import Interface.TV.OFun
 import Interface.TV.Common
 import Interface.TV.Defaults
 import Interface.TV.UI

@@ -13,7 +13,7 @@
 -- 'Output' transformations, as a "deep arrow".
 ----------------------------------------------------------------------
 
-module Interface.TV.OFun (OFun) where
+module Interface.TV.OFun (OFun,wrapO,wrapAO) where
 
 import Control.Arrow
 
@@ -27,13 +27,13 @@ type OX (~>) a b = Output (~>) a -> Output (~>) b
 
 newtype OFun (~>) a b = OFun (OX (~>) a b)
 
--- TODO: consider generalizing from "->" in OFun?
+-- TODO: consider generalizing from "->" in IFun?
 
 instance Arrow (OFun (~>)) where
   -- (a->b) -> OFun (~>) a b
-  arr = -- error "Interface.TV.OFun: no 'arr' method"
+  arr = error "Interface.TV.OFun: no 'arr' method"
         -- We could use the following definition instead.
-        const $ OFun (const OEmpty)
+        -- const $ OFun (const OEmpty)
 
   -- OFun (~>) a b -> OFun (~>) b c -> OFun (~>) a c
   OFun f >>> OFun g = OFun (f >>> g)
@@ -60,7 +60,8 @@ instance DeepArrow (OFun (~>)) where
   curryA   = postFun "curried" curryO
   uncurryA = postFun "uncurried" uncurryO
 
-  result (OFun ox) = OFun (resultO ox)
+  result   (OFun ox) = OFun (resultO   ox)
+  -- argument (OFun ox) = OFun (argumentO ox)
 
 instance FunArr (OFun (~>)) (Output (~>)) where
   toArr ofun = OFun (applyO ofun)
@@ -92,6 +93,9 @@ postFun post = OFun . posttitle post
 resultO :: OX (~>) b b' -> OX (~>) (a->b) (a->b')
 resultO ox ab = OLambda a (ox b)
   where (a,b) = asOLambda ab
+
+-- argumentO :: OX (~>) a' a -> OX (~>) (a->b) (a'->b)
+-- argumentO ox ab = 
 
 applyO :: Output (~>) (a->b) -> OX (~>) a b
 applyO o = const b where (_,b) = asOLambda o
@@ -149,4 +153,25 @@ uncurryO o = OLambda (IPair a b) c
         (b, c) = asOLambda bc
 
 -- For now leave lAssocA and rAssocA as default.
+
+
+---- Other functions
+
+-- | Like @wrapF@, but for outputs and reversed orientation.
+-- Specialization of 'wrapAO'.
+wrapO :: Arrow (~>) => (b'->b) -> (a->a') -> OX (~>) (a->b) (a'->b')
+wrapO g f = wrapAO (pure g) (pure f)
+
+-- | Generalizes 'wrapO' for arbitrary arrows.
+wrapAO :: Arrow (~>) =>
+          (b' ~> b) -> (a ~> a') -> OX (~>) (a->b) (a'->b')
+wrapAO outer inner ab = OLambda (ia `iCompose` inner) (outer `oCompose` ob)
+ where
+   (ia,ob) = asOLambda ab
+
+
+-- Then we get an elegant definition of @interactRSOut@:
+
+-- interactRSOut dflt = wrapO show (readD dflt) interactLine
+
 

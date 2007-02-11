@@ -1,5 +1,5 @@
 Name:                TV
-Version:             0.0
+Version:             0.1
 Synopsis:	     Tangible Values -- composable interfaces
 Category:            Interfaces
 Description:
@@ -48,4 +48,4 @@ Exposed-Modules:
 Extra-Source-Files:  
                      Interface.TV.DefaultsList
                      Examples
-ghc-options:         -O
+ghc-options:         -O -W

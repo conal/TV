@@ -1,19 +1,18 @@
-Version 0.0:
+To do: redo interactRSOut with wrapO
 
-* Support for Kleisli arrows and IO in particular.
+Version 0.1:
 
-* Grading examples.  I'm very happy with them.
-
-* Added ICompose & OCompose, and used for Functor & Cofunctor instances.  Now
-  I have to figure out what the Eros composition operators do with these
-  constructors.
-
-* Used fmap/cofmap to define a Read&Show version of interact.
-
-* Made prompts/titles an orthogonal feature (as in Phooey).  Now one can
-  title an aggregate.  Required adding constructors to Input & Output.
-  Figure out Eros operators.
-
----- darcs record
-
-* Created
+* Removed iEmpty & iEmpty and corresponding constructors. Generate dynamic
+  errors earlier rather than later.
+* Removed ICompose & OCompose constructors.  Redefined iCompose and
+  oCompose (and consequently fmap on inputs and cofmap on outputs) to work
+  only on (possibly titled) primitives.  I don't know how to implement the
+  DeepArrow algebra with OCompose.
+* Added wrapO and wrapAO, sort of analogous (or dual) to wrapF.  I'm not
+  sure the name is a great choice.  I've also considered "unwrapO".
+* Added fromFile & toFile TV functions.
+* Added fileOut 
+* Moved Grading example from src/Examples.hs to src/Grading.hs
+* Added "short lines" example to src/Examples.hs.
+* Added type alias RunTV for defining types of runTV specializations, such
+  as runUI and runIO.

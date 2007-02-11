@@ -33,28 +33,32 @@ import Interface.TV.Output
 -- @instance Present arr@ for your arrow @arr@.
 class Arrow (~>) => Present (~>) where
   presentPair     :: a ~> b -> a ~> b
-  presentLambda   :: a ~> b -> a ~> b
-  presentCompose  :: a ~> b -> a ~> b
-  presentTitle    :: String -> a ~> b -> a ~> b
   presentPair     =  id
+  presentLambda   :: a ~> b -> a ~> b
   presentLambda   =  id
-  presentCompose  =  id
+  presentTitle    :: String -> a ~> b -> a ~> b
   presentTitle _  =  id
+--   presentCompose  :: a ~> b -> a ~> b
+--   presentCompose  =  id
 
 -- | Convert an 'Input' into an arrow value.
 accept :: Present (~>) => Input (~>) b -> () ~> b
 
-accept IEmpty          = arr $ const $ error "cannot get value from empty input"
+-- accept IEmpty          = arr $ const $ error "cannot get value from empty input"
+
 accept (IPrim p)       = p
+
 accept (IPair ia ib)   = presentPair (accept ia &&& accept ib)
-accept (ICompose a ab) = presentCompose (accept a >>> ab)
+
 accept (ITitle str i)  = presentTitle str (accept i)
+
+-- accept (ICompose a ab) = presentCompose (accept a >>> ab)
 
 -- | Convert an 'Output' into an arrow value
 present :: Present (~>) => Output (~>) a -> a ~> ()
 
-present OEmpty = arr $ const ()
-                 -- presentEmpty
+-- present OEmpty = arr $ const ()
+--                  -- presentEmpty
 
 present (OPrim p) = p
 
@@ -68,7 +72,7 @@ present (OLambda i o) =  presentLambda $
                               pure (uncurry ($))     >>>
                               present o
 
-present (OCompose ab b) = presentCompose $
-                               ab >>> present b
+-- present (OCompose ab b) = presentCompose $
+--                                ab >>> present b
 
 present (OTitle str o)  = presentTitle str (present o)

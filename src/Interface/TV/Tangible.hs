@@ -14,7 +14,7 @@
 module Interface.TV.Tangible
   (
   -- * Tangible values
-   TV, tv, unTv, runTV
+   TV, tv, unTv, RunTV, runTV
   ) where
 
 import Control.Arrow
@@ -49,7 +49,10 @@ tv o a = Pair1 (o, return a)
 unTv :: TV (~>) a -> (Output (~>) a, a)
 unTv (Pair1 (o, ida)) = (o, runIdentity ida)
 
+-- | To define disambiguating type-specializations
+type RunTV (~>) = forall a. TV (~>) a -> IO ()
+
 -- | Run a 'TV'
-runTV :: (ToIO (~>), Present (~>)) => TV (~>) a -> IO ()
+runTV :: (ToIO (~>), Present (~>)) => RunTV (~>)
 runTV teevee = toIO (pure (const a) >>> present o)
   where (o,a) = unTv teevee

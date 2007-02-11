@@ -21,7 +21,9 @@ module Interface.TV.IO
   -- * Inputs
   , contentsIn, fileIn
   -- * Outputs
-  , interactOut
+  , interactOut, fileOut
+  -- * TVs
+  , fromFile, toFile
   -- * Disambiguator
   , runIO
   ) where
@@ -30,7 +32,7 @@ import Control.Arrow
 
 import Interface.TV.Input
 import Interface.TV.Output
-import Interface.TV.Tangible (TV,runTV)
+import Interface.TV.Tangible (tv,TV,RunTV,runTV)
 import Interface.TV.Kleisli
 import Interface.TV.Common
 
@@ -77,7 +79,7 @@ contentsIn :: Input KIO String
 contentsIn = kIn getContents
 
 -- | 'Input' version of 'readFile'
-fileIn :: String -> Input KIO String
+fileIn :: FilePath -> Input KIO String
 fileIn name = kIn (readFile name)
 
 {----------------------------------------------------------
@@ -88,6 +90,20 @@ fileIn name = kIn (readFile name)
 interactOut :: Output KIO (String -> String)
 interactOut = oLambda contentsIn stringOut
 
+-- | 'Output' version of 'writeFile'
+fileOut :: FilePath -> Output KIO String
+fileOut name = kOut (writeFile name)
+
+
+{----------------------------------------------------------
+    TVs
+----------------------------------------------------------}
+
+fromFile :: FilePath -> TV KIO (String->String)
+fromFile name = tv (oLambda (fileIn name) stringOut) id
+
+toFile :: FilePath -> TV KIO (String->String)
+toFile name = tv (oLambda stringIn (fileOut name)) id
 
 {----------------------------------------------------------
     Disambiguator
@@ -95,5 +111,5 @@ interactOut = oLambda contentsIn stringOut
 
 -- | Many TVs work for all 'CommonInsOuts' arrows.  Applying 'runTV' is
 -- then ambiguous.  This type specialization disambiguates.
-runIO :: TV KIO a -> IO ()
+runIO :: RunTV KIO
 runIO = runTV

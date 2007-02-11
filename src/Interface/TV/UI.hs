@@ -30,7 +30,7 @@ import qualified Graphics.UI.Phooey as Ph (islider)
 import Interface.TV.Input (Input,iPrim)
 import Interface.TV.Present (Present(..))
 import Interface.TV.Common (CommonInsOuts(..))
-import Interface.TV.Tangible (TV,runTV)
+import Interface.TV.Tangible (RunTV,runTV)
 import Interface.TV.Misc (ToIO(..))
 
 
@@ -41,8 +41,8 @@ import Interface.TV.Misc (ToIO(..))
 instance Present UI where
   presentPair    = fromLeft
   presentLambda  = fromTop
-  presentCompose = id
   presentTitle   = title
+  -- presentCompose = id
 
 -- For the Eros version, I'll want presentCompose to replace all inner
 -- handles with one outer handle.
@@ -69,5 +69,5 @@ islider initial bounds =
 
 -- | Many TVs work for all 'CommonInsOuts' arrows.  Applying 'runTV' is
 -- then ambiguous.  This type specialization disambiguates.
-runUI :: TV UI a -> IO ()
+runUI :: RunTV UI
 runUI = runTV
