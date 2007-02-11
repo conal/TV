@@ -105,16 +105,16 @@ interactLine :: COutput (String -> String)
 interactLine = oLambda stringIn stringOut
 
 -- | Handy Read+Show wrapper
-readShow :: (Read a, Show b)
-         => COutput (String->String)    -- ^ base output
-         -> a                           -- ^ default, when read fails
-         -> COutput (a -> b)
+readShow :: (Read a, Show b, CommonInsOuts (~>))
+         => Output (~>) (String->String) -- ^ base output
+         -> a                            -- ^ default, when read fails
+         -> Output (~>) (a -> b)
 readShow o dflt = wrapO show (readD dflt) o
 
 -- | Read+Show of 'interactLine'
-interactLineRS :: (Read a, Show b)
+interactLineRS :: (Read a, Show b, CommonInsOuts (~>))
                => a                     -- ^ default, if read fails
-               -> COutput (a -> b)
+               -> Output (~>) (a -> b)
 interactLineRS = readShow interactLine
 
 -- Equivalently:

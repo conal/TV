@@ -21,7 +21,7 @@ module Interface.TV.IO
   -- * Inputs
   , contentsIn, fileIn
   -- * Outputs
-  , interactOut, fileOut
+  , interactOut, interactRS, fileOut
   -- * TVs
   , fromFile, toFile
   -- * Disambiguator
@@ -93,7 +93,7 @@ interactOut = oLambda contentsIn stringOut
 -- | Read+Show of 'interact'
 interactRS :: (Read a, Show b)
            => a                         -- ^ default, if read fails
-           -> COutput (a -> b)
+           -> Output KIO (a -> b)
 interactRS = readShow interactOut
 
 -- | 'Output' version of 'writeFile'
