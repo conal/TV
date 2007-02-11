@@ -13,7 +13,7 @@
 -- 'Output' transformations, as a "deep arrow".
 ----------------------------------------------------------------------
 
-module Interface.TV.OFun (OFun,wrapO,wrapAO) where
+module Interface.TV.OFun (OX,OFun,wrapO,wrapAO) where
 
 import Control.Arrow
 
