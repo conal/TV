@@ -23,8 +23,10 @@ import Control.Arrow.DeepArrow
 import Interface.TV.Output
 import Interface.TV.Input
 
+-- | Output functions.
 type OX (~>) a b = Output (~>) a -> Output (~>) b
 
+-- | Output functions as a 'DeepArrow'
 newtype OFun (~>) a b = OFun (OX (~>) a b)
 
 -- TODO: consider generalizing from "->" in IFun?

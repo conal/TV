@@ -20,7 +20,7 @@ module Interface.TV
   -- * 'Output'
   , Output{-, oEmpty-}, oPrim, oLambda, oPair, oCompose, oTitle
   -- * 'Output' transformers
-  , OFun, wrapO, wrapAO
+  , OX, OFun, wrapO, wrapAO
   -- * Common ins & outs
   , Common, CInput, COutput
   , stringIn, readIn{-, intIn-}, stringOut, showOut, interactLine
