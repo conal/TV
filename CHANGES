@@ -1,5 +1,7 @@
-Version 0.1:
+Version 0.1.1:
+* Changed all files to *nix-style line endings.
 
+Version 0.1:
 * Removed iEmpty & iEmpty and corresponding constructors. Generate dynamic
   errors earlier rather than later.
 * Removed ICompose & OCompose constructors.  Redefined iCompose and
