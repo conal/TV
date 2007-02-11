@@ -14,7 +14,7 @@ Version 0.1:
 * Redefined interactRSOut via readShow and renamed "interactLineRS".
   Added "interactRS".
 * Added fromFile & toFile TV functions.
-* Added fileOut 
+* Added fileOut
 * Moved Grading example from src/Examples.hs to src/Grading.hs
 * Added "short lines" example to src/Examples.hs.
 * Added type alias RunTV for defining types of runTV specializations, such
