@@ -1,4 +1,6 @@
 Version 0.2:
+* Simplified exports in src/Interface/TV.hs.  Now just exports by module
+  rather than by entity.  Also re-export DeepArrow modules.
 * Moved GUI functionality out to a new package "GuiTV".  Removed
   dependency on Phooey and (indirectly) wxHaskell, as the latter can be
   difficult to install.

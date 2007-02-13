@@ -3,7 +3,7 @@ viewed as an approach to functional interfaces.  The name "TV" comes
 "tangible values", which is the central idea of the library.  For a fuller
 description and link to documentation, please see the project wiki page:
 
-  http://haskell.org/haskellwiki/phooey
+  http://haskell.org/haskellwiki/TV
 
 You can configure, build, generate haddock docs, and install all in the
 usual way with Cabal commands.
