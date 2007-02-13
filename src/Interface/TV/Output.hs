@@ -10,8 +10,7 @@
 -- Stability   :  experimental
 -- Portability :  portable
 -- 
--- This module defines an 'Output' type constructor, for presenting
--- typed values to a user.
+-- Outputs (interfaces) -- means of presenting values
 ----------------------------------------------------------------------
 
 module Interface.TV.Output

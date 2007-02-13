@@ -4,22 +4,12 @@ module Examples where
 
 import Data.List (sort)
 
-import Control.Arrow.DeepArrow
-import Data.FunArr
+-- import Control.Arrow.DeepArrow
+-- import Data.FunArr
 import Interface.TV
 
-main = runBoth shopping
-
-
--- Run both UI and IO flavors
-runBoth :: CTV a -> IO ()
-runBoth tv = runUI tv >> runIO tv
-
-tv0 :: CTV String
-tv0 = tv (oTitle "message" stringOut) "Hello World!"
-
-tv1 :: CTV Int
-tv1 = tv (oTitle "answer" showOut) (42 :: Int)
+-- Try out these the examples with runIO.  For the explicitly IO-typed examples, you
+-- can use runIO or runTV.
 
 reverseT :: DefaultOut ([a] -> [a]) => CTV ([a] -> [a])
 reverseT = tv (oTitle "reverse" defaultOut) reverse
@@ -27,75 +17,6 @@ reverseT = tv (oTitle "reverse" defaultOut) reverse
 --  This one reverses twice
 revTwice :: CTV (String -> String)
 revTwice = reverseT ->| reverseT
-
-apples, bananas :: CInput Int
-apples  = iTitle "apples"  defaultIn
-bananas = iTitle "bananas" defaultIn
-
-total :: Show a => COutput a
-total = oTitle "total" showOut
-
-shoppingO :: COutput (Int -> Int -> Int)
-shoppingO = oTitle "shopping list" $
-            oLambda apples (oLambda bananas total)
-
-shopping :: CTV (Int -> Int -> Int)
-shopping = tv shoppingO (+)
-
-shoppingPr :: CTV ((Int,Int) -> Int)
-shoppingPr = tv ( oTitle "shopping list -- curried" $ 
-                  oLambda (iPair apples bananas) total )
-                (uncurry (+))
-
-shoppingPr' :: CTV ((Int,Int) -> Int)
-shoppingPr' = uncurryA $$ shopping
-
-
-applesU, bananasU :: Input UI Int
-applesU  = iTitle "apples"  (islider 3 (0,10))
-bananasU = iTitle "bananas" (islider 7 (0,10))
-
-shoppingUO :: Output UI (Int -> Int -> Int)
-shoppingUO = oTitle "shopping list" $
-             oLambda applesU (oLambda bananasU total)
-
-shoppingU :: TV UI (Int -> Int -> Int)
-shoppingU = tv shoppingUO (+)
-
-shoppingPrU :: TV UI ((Int,Int) -> Int)
-shoppingPrU = uncurryA $$ shoppingU
-
-
--- This one is polymorphic in value, so say something like
--- "runBoth (sortT :: CTV ([String] -> [String]))".  If you leave out the type
--- annotation, a will default to Int.
-sortT :: (Read a, Show a, Ord a) => CTV ([a] -> [a])
-sortT = tv (oTitle "sort" $ interactLineRS []) sort
-
-
----- Composition.
-
--- Idea: unwords, sort, words
-
-instance DefaultOut [String] where defaultOut = showOut
-instance DefaultIn  [String] where defaultIn  = readIn []
-
-
-wordsT :: CTV (String -> [String]) 
-wordsT = tv ( oTitle "function: words" $
-              oLambda (iTitle "sentence in" defaultIn)
-                      (oTitle "words out"   defaultOut))
-            words
-
-unwordsT :: CTV ([String] -> String) 
-unwordsT = tv ( oTitle "function: unwords" $
-                oLambda (iTitle "words in"     defaultIn)
-                        (oTitle "sentence out" defaultOut))
-              unwords
-
-sortWordsT :: CTV (String -> String)
-sortWordsT = wordsT ->| sortT ->| unwordsT
-
 
 ---- IO examples
 

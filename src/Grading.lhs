@@ -12,8 +12,7 @@ import Data.List (sort)
 import Data.Map (Map,empty,keys,insertWith,findWithDefault)
 import Text.Printf
 
-import Control.Arrow.DeepArrow
-import Interface.TV -- 0.1
+import Interface.TV -- 0.1 or later
 \end{code}
 === 
 

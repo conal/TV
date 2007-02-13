@@ -1,15 +1,17 @@
 {-# OPTIONS -fglasgow-exts #-}
 
-{- |
-   Module      :  Interface.TV.Tangible
-   Copyright   :  (c) Conal Elliott 2006
-   License     :  LGPL
-
-   Maintainer  :  conal@conal.net
-   Stability   :  experimental
-   Portability :  portable
-
--}
+----------------------------------------------------------------------
+-- |
+-- Module      :  Interface.TV.Tangible
+-- Copyright   :  (c) Conal Elliott 2006
+-- License     :  LGPL
+-- 
+-- Maintainer  :  conal@conal.net
+-- Stability   :  experimental
+-- Portability :  portable
+-- 
+-- Tangible values -- interface (output) and value, combined & separable
+----------------------------------------------------------------------
 
 module Interface.TV.Tangible
   (
@@ -49,7 +51,7 @@ tv o a = Pair1 (o, return a)
 unTv :: TV (~>) a -> (Output (~>) a, a)
 unTv (Pair1 (o, ida)) = (o, runIdentity ida)
 
--- | To define disambiguating type-specializations
+-- | Useful to define disambiguating type-specializations of 'runTV'
 type RunTV (~>) = forall a. TV (~>) a -> IO ()
 
 -- | Run a 'TV'

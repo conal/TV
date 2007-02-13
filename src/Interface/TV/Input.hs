@@ -10,8 +10,7 @@
 -- Stability   :  experimental
 -- Portability :  portable
 -- 
--- This module defines an 'Input' type constructor, for obtaining typed
--- values from a user.
+-- Inputs -- means of obtaining values
 ----------------------------------------------------------------------
 
 module Interface.TV.Input

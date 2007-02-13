@@ -1,3 +1,8 @@
+Version 0.2:
+* Moved GUI functionality out to a new package "GuiTV".  Removed
+  dependency on Phooey and (indirectly) wxHaskell, as the latter can be
+  difficult to install.
+
 Version 0.1.1:
 * Changed all files to *nix-style line endings.
 

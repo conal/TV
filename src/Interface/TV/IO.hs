@@ -115,7 +115,6 @@ toFile name = tv (oLambda stringIn (fileOut name)) id
     Disambiguator
 ----------------------------------------------------------}
 
--- | Many TVs work for all 'CommonInsOuts' arrows.  Applying 'runTV' is
--- then ambiguous.  This type specialization disambiguates.
+-- | Type-disambiguating alias for 'runTV'
 runIO :: RunTV KIO
 runIO = runTV

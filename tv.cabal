@@ -1,15 +1,11 @@
 Name:                TV
-Version:             0.1.1
+Version:             0.2
 Synopsis:	     Tangible Values -- composable interfaces
 Category:            Interfaces
 Description:
   TV is a library for composing /tangible values/ (\"TVs\"), i.e., values
   that carry along external interfaces.  Values and interfaces are
   /combined and separable/, which makes TVs ready to use and to reuse.
-  .
-  If you just want to /use/ TV, see the main module below
-  ("Interface.TV").  The other modules (@UI.Graphics.TV.*@) are useful
-  for understanding the implementation and adding new features.
   .
   Try out the examples in @src\/Examples.hs@.
   .
@@ -29,7 +25,7 @@ Copyright:           (c) 2006 by Conal Elliott
 License:             BSD3
 Stability:	     experimental
 Hs-Source-Dirs:      src
-Build-Depends:       base, mtl, phooey>=0.1, DeepArrow
+Build-Depends:       base, mtl, DeepArrow
 tested-with:	     GHC==6.6
 Extensions:          CPP
 Exposed-Modules:     
@@ -41,7 +37,6 @@ Exposed-Modules:
                      Interface.TV.OFun
                      Interface.TV.Common
                      Interface.TV.Defaults
-                     Interface.TV.UI
                      Interface.TV.Kleisli
                      Interface.TV.IO
                      Interface.TV.Misc

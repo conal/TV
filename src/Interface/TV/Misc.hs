@@ -10,10 +10,13 @@
 -- Stability   :  experimental
 -- Portability :  portable
 -- 
--- Misc helpers
+-- Miscellaneous helpers
 ----------------------------------------------------------------------
 
-module Interface.TV.Misc where
+module Interface.TV.Misc
+  (
+   readD, Cofunctor(..), ToIO(..), wrapF
+  ) where
 
 import Control.Arrow (Arrow)
 
@@ -37,12 +40,3 @@ class Arrow (~>) => ToIO (~>) where
 -- string function into value function.
 wrapF :: (c->d) -> (a->b) -> ((b->c) -> (a->d))
 wrapF after before f = after . f . before
-
-
--- Just a haddock test.  I added this infix support.
-
--- foodle :: Arrow (~>) => a~>b -> b~>c -> a~>c
--- foodle = undefined
-
--- doodle :: Arrow arr => a `arr` b
--- doodle = undefined

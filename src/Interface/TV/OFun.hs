@@ -10,7 +10,7 @@
 -- Stability   :  experimental
 -- Portability :  portable
 -- 
--- 'Output' transformations, as a "deep arrow".
+-- 'Output' transformations, as a deep arrow.
 ----------------------------------------------------------------------
 
 module Interface.TV.OFun (OX,OFun,wrapO,wrapAO) where
