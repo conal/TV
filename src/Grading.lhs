@@ -1,8 +1,8 @@
 ! Introduction /% -*-Twee-*- (http://www.gimcrackd.com/etc/src/twee.el) %/
-This post illustrates an approach to separating logic and IO using the [[TV| http://haskell.org/haskellwiki/TV]] library.  The example is [[from Don Stewart's blog| http://cgi.cse.unsw.edu.au/~dons/blog/2006/12/16#programming-haskell-intro]]. My thanks to Don, as this example inspired me to play with alternatives, which led to generalizing TV from GUIs to a more general notion of "interfaces". The TV approach clarifies the pure logic part and the IO part and is more conveniently composable than the mixed logic/IO formulation.
+The example in this post illustrates an approach to separating logic and IO using the [[TV| http://haskell.org/haskellwiki/TV]] library.  The example is [[from Don Stewart's blog| http://cgi.cse.unsw.edu.au/~dons/blog/2006/12/16#programming-haskell-intro]]. My thanks to Don, as this example inspired me to play with alternatives, which led to generalizing TV from GUIs to a more general notion of "interfaces". The TV approach clarifies the pure logic part and the IO part and is more conveniently composable than the mixed logic/IO formulation.
 
 ! What's this?
-This post is a literate Haskell program, as well as a TiddlyWiki passage (tiddler).  To run the program, double-click on the entry, copy the markup into file called "Grading.lhs", install [[TV| http://haskell.org/haskellwiki/TV]] 0.1 or later (and the libraries TV [[depends on| http://darcs.haskell.org/packages/TV/TV.cabal]]).
+This post is a literate Haskell program, as well as a TiddlyWiki passage (tiddler).  To run the program, double-click on the entry, copy the markup into file called "Grading.lhs", install [[TV| http://haskell.org/haskellwiki/TV]] 0.1 or later (and the libraries on which TV [[depends| http://darcs.haskell.org/packages/TV/TV.cabal]]).  I recommend TV 0.2 or later, which does not require GUI support (moved out to [[GuiTV| http://haskell.org/haskellwiki/GuiTV]]).
 
 In the text below, you can click boxed ">" symbols to show more detail and click boxed "<" symbols to show less detail.  For example, we begin with a module header. +++
 \begin{code}
@@ -12,7 +12,8 @@ import Data.List (sort)
 import Data.Map (Map,empty,keys,insertWith,findWithDefault)
 import Text.Printf
 
-import Interface.TV -- 0.1 or later
+import Interface.TV
+import Interface.TV.OFun()  -- work around GHC bug.  ticket #1145
 \end{code}
 === 
 
@@ -67,8 +68,7 @@ A more general approach is to split @grades_2@ into //two// parts (rather than t
 \begin{code}
 gradingStrOut = oLambda (fileIn "tasks") stringOut
 \end{code}
-The TV functions @fileIn@ and @stringOut@ are trivial wrappers around
-@readFile@ and @putStr@.
+The TV functions @fileIn@ and @stringOut@ are trivial wrappers around @readFile@ and @putStr@.
 
 Combining this interface with the pure value, we get a "TV" (tangible value):
 \begin{code}

@@ -1,12 +1,15 @@
 {-# OPTIONS -fglasgow-exts #-}
 
+-- Some TV examples
+
 module Examples where
 
 import Data.List (sort)
 
--- import Control.Arrow.DeepArrow
--- import Data.FunArr
 import Interface.TV
+
+-- To pick up the FunArr instance for OFun.  GHC bug?
+import Interface.TV.OFun()
 
 -- Try out these the examples with runIO.  For the explicitly IO-typed examples, you
 -- can use runIO or runTV.

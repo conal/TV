@@ -102,8 +102,11 @@ iPair = IPair
 
 -- | Massage via an arrow value (generalizes fmap)
 iCompose :: Arrow (~>) => Input (~>) a -> a ~> b -> Input (~>) b
-IPrim put `iCompose` arr = IPrim (put >>> arr)
-i         `iCompose` _   = error ("iCompose given non-IPrim: "++show i)
+IPrim put `iCompose` arr     = IPrim (put >>> arr)
+ITitle str ab `iCompose` arr = ITitle str (ab `iCompose` arr)
+i         `iCompose` _       = error ("iCompose given non-IPrim: "++show i)
+
+-- Not sure about the ITitle choice
 
 -- iCompose = ICompose
 

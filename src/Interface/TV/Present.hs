@@ -15,7 +15,7 @@
 
 module Interface.TV.Present
   (
-   present, Present(..)
+   present, accept, Present(..)
   ) where
 
 import Control.Arrow

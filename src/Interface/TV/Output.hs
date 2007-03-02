@@ -40,7 +40,8 @@ import Interface.TV.Misc (Cofunctor(..))
 data Output (~>) a
 #else
 data Output (~>) :: * -> * where
-  -- | When we don't know what output to use.  I might remove this constructor.
+  -- When we don't know what output to use.  Removed that that error
+  -- messages will arise earlier.
   -- OEmpty :: Output (~>) a
   -- | Output primitive
   OPrim :: a ~> () -> Output (~>) a
@@ -53,8 +54,6 @@ data Output (~>) :: * -> * where
   -- | Title/label an output
   OTitle :: String -> Output (~>) a -> Output (~>) a
 #endif
-
--- See 'OEmpty' for note about eliminating OEmpty.
 
 instance Show (Output (~>) a) where
   -- show OEmpty          = "OEmpty"
@@ -132,8 +131,11 @@ oPair = OPair
 
 -- | Massage via an arrow value (like cofmap)
 oCompose :: Arrow (~>) => a ~> b -> Output (~>) b -> Output (~>) a
-arr `oCompose` OPrim put = OPrim (arr >>> put)
-_   `oCompose` o         = error ("oCompose given non-OPrim: "++show o)
+arr `oCompose` OPrim put     = OPrim (arr >>> put)
+arr `oCompose` OTitle str ab = OTitle str (arr `oCompose` ab)
+_   `oCompose` o             = error ("oCompose given non-OPrim: "++show o)
+
+-- Not sure about the OTitle choice
 
 -- oCompose = OCompose
 
