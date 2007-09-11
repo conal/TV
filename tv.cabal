@@ -1,5 +1,5 @@
 Name:                TV
-Version:             0.2
+Version:             0.3
 Synopsis:	     Tangible Values -- composable interfaces
 Category:            Interfaces
 Description:
@@ -25,7 +25,7 @@ Copyright:           (c) 2006 by Conal Elliott
 License:             BSD3
 Stability:	     experimental
 Hs-Source-Dirs:      src
-Build-Depends:       base, mtl, DeepArrow
+Build-Depends:       base, DeepArrow, TypeCompose >= 0.2
 tested-with:	     GHC==6.6
 Extensions:          CPP
 Exposed-Modules:     
@@ -33,14 +33,10 @@ Exposed-Modules:
                      Interface.TV.Input
                      Interface.TV.Output
                      Interface.TV.Tangible
-                     Interface.TV.Present
                      Interface.TV.OFun
                      Interface.TV.Common
-                     Interface.TV.Defaults
-                     Interface.TV.Kleisli
                      Interface.TV.IO
-                     Interface.TV.Misc
+                     Interface.TV.Defaults
 Extra-Source-Files:  
-                     Interface.TV.DefaultsList
                      Examples
 ghc-options:         -O -W

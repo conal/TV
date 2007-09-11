@@ -1,4 +1,4 @@
-{-# OPTIONS -fglasgow-exts #-}
+{-# LANGUAGE MultiParamTypeClasses, OverlappingInstances, TypeSynonymInstances, FlexibleInstances, UndecidableInstances, IncoherentInstances #-}
 
 ----------------------------------------------------------------------
 -- |
@@ -34,18 +34,21 @@ import Interface.TV.Common
 ----------------------------------------------------------}
 
 -- | Class of types that provide a default input
-class DefaultIn a where
+class DefaultIn src a where
   -- | The default input for a type
-  defaultIn :: CInput a
+  defaultIn :: Input src a
 
-instance DefaultIn Bool   where defaultIn = boolIn False
-instance DefaultIn Int    where defaultIn = readIn 0
-instance DefaultIn Double where defaultIn = readIn 0
-instance DefaultIn Float  where defaultIn = readIn 0
-instance DefaultIn String where defaultIn = stringIn
+instance CommonIns src => DefaultIn src Bool   where defaultIn = boolIn False
+instance CommonIns src => DefaultIn src Int    where defaultIn = readIn 0
+instance CommonIns src => DefaultIn src Double where defaultIn = readIn 0
+instance CommonIns src => DefaultIn src Float  where defaultIn = readIn 0
+instance CommonIns src => DefaultIn src String where defaultIn = stringIn ""
 
-instance (DefaultIn a, DefaultIn b) => DefaultIn (a,b) where
+instance (DefaultIn src a, DefaultIn src b) => DefaultIn src (a,b) where
   defaultIn = IPair defaultIn defaultIn
+
+instance (Read a, Show a, CommonIns src, DefaultIn src a) => DefaultIn src [a] where
+  defaultIn = readIn []
 
 
 {----------------------------------------------------------
@@ -53,18 +56,25 @@ instance (DefaultIn a, DefaultIn b) => DefaultIn (a,b) where
 ----------------------------------------------------------}
 
 -- | Class of types that provide a default output
-class DefaultOut a where
+class DefaultOut src snk a where
   -- | The default output for a type
-  defaultOut :: COutput a
+  defaultOut :: Output src snk a
 
-instance DefaultOut Bool   where defaultOut = boolOut
-instance DefaultOut Int    where defaultOut = showOut
-instance DefaultOut Double where defaultOut = showOut
-instance DefaultOut Float  where defaultOut = showOut
-instance DefaultOut String where defaultOut = stringOut
+instance (CommonIns src, CommonOuts snk) => DefaultOut src snk Bool   where defaultOut = boolOut
+instance (CommonIns src, CommonOuts snk) => DefaultOut src snk Int    where defaultOut = showOut
+instance (CommonIns src, CommonOuts snk) => DefaultOut src snk Double where defaultOut = showOut
+instance (CommonIns src, CommonOuts snk) => DefaultOut src snk Float  where defaultOut = showOut
+instance (CommonIns src, CommonOuts snk) => DefaultOut src snk String where defaultOut = stringOut
 
-instance (DefaultOut a, DefaultOut b) => DefaultOut (a,b) where
+-- The OverlappingInstances, UndecidableInstances, and IncoherentInstances
+-- are all for the overlap of String and lists.
+
+instance (DefaultOut src snk a, DefaultOut src snk b) => DefaultOut src snk (a,b) where
   defaultOut = OPair defaultOut defaultOut
 
-instance (DefaultIn a, DefaultOut b) => DefaultOut (a->b) where
+instance (DefaultIn src a, DefaultOut src snk b) => DefaultOut src snk (a->b) where
   defaultOut = OLambda defaultIn defaultOut
+
+instance (Show a, CommonIns src, CommonOuts snk, DefaultOut src snk a) =>
+    DefaultOut src snk [a] where
+  defaultOut = showOut

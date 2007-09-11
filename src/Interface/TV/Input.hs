@@ -1,14 +1,19 @@
-{-# OPTIONS -fglasgow-exts -cpp #-}
+{-# LANGUAGE CPP #-}
+-- The GADTs language option isn't recognized, and -XGADTs doesn't seem to work, so
+
+{-# OPTIONS_GHC -fglasgow-exts #-}
+-- {-# OPTIONS_GHC -XGADTs #-}
+
 
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV.Input
--- Copyright   :  (c) Conal Elliott 2006
+-- Copyright   :  (c) Conal Elliott 2007
 -- License     :  LGPL
 -- 
 -- Maintainer  :  conal@conal.net
 -- Stability   :  experimental
--- Portability :  portable
+-- Portability :  CPP, GADT
 -- 
 -- Inputs -- means of obtaining values
 ----------------------------------------------------------------------
@@ -16,13 +21,16 @@
 module Interface.TV.Input
   (
   -- * Input data type
-    Input(..)
-  -- * Canonicalizers
+    Input(..), input
+  -- * Input functions
+  -- ** Builders
+  , iPrim, iPair, iTitle
+  -- ** Canonicalizers
   , asIPair
-  {-, iEmpty-}, iPrim, iPair, iCompose, iTitle
   ) where
 
-import Control.Arrow
+import Data.Pair  (Pair(..))
+import Data.Title (Title_f(..))
 
 {----------------------------------------------------------
     Input data type
@@ -31,37 +39,79 @@ import Control.Arrow
 -- | An /Input/ describes a way to obtain a functional value from a user.
 -- Used in Output for making function visualizations.
 #ifdef __HADDOCK__
-data Input (~>) a
+data Input src a
 #else
-data Input (~>) :: * -> * where
-  -- | When we don't know what input to use.   I might remove this constructor.
-  -- IEmpty :: Input (~>) a
+data Input src :: * -> * where
   -- | Input primitive
-  IPrim :: () ~> a -> Input (~>) a
+  IPrim :: src a -> Input src a
   -- | Input a pair
-  IPair :: Input (~>) a -> Input (~>) b -> Input (~>) (a,b)
+  IPair :: Input src a -> Input src b -> Input src (a,b)
   -- | Massage via an arrow value (generalizes fmap)
-  -- ICompose :: Input (~>) a -> a ~> b -> Input (~>) b
+  -- ICompose :: Input src a -> src (a -> b) -> Input src b
   -- | Title/label an input
-  ITitle :: String -> Input (~>) a -> Input (~>) a
+  ITitle :: String -> Input src a -> Input src a
 #endif
+
+instance Title_f (Input src) where title_f = iTitle
 
 -- See 'OEmpty' for note about eliminating OEmpty.
 
-instance Show (Input (~>) a) where
+instance Show (Input src a) where
   -- show IEmpty          = "IEmpty"
   show (IPrim _)       = "(IPrim _)"
   show (IPair a b)     = "(IPair "++show a++" "++show b++")"
   -- show (ICompose a _)  = "(ICompose "++show a++" _)"
   show (ITitle str i)  = "(ITitle "++show str++" "++show i++")"
 
+input :: (Pair src, Title_f src) => Input src t -> src t
+
+input (IPrim ft)     = ft
+input (IPair a b)    = input a `pair` input b
+input (ITitle str t) = title_f str (input t)
+
+
+{----------------------------------------------------------
+    Input functions
+----------------------------------------------------------}
+
+-- The rest just rename the constructors.  Maybe eliminate.
+-- Keep for now, since Haddock can't digest the constructor declarations.
+
+-- Alternatively, eliminate IEmpty and define
+
+-- | Input primitive
+iPrim :: src a -> Input src a
+iPrim = IPrim
+
+-- | Input a pair
+iPair :: Input src a -> Input src b -> Input src (a,b)
+iPair = IPair
+
+instance Pair (Input src) where pair = iPair
+
+-- | Massage via an arrow value (generalizes fmap)
+fmapO :: Functor src => (a -> b) -> Input src a -> Input src b
+fmapO f (IPrim fa)     = IPrim (fmap f fa)
+fmapO f (ITitle str a) = ITitle str (fmapO f a)
+fmapO _ i              = error ("fmap given non-IPrim: "++show i)
+
+-- Not sure about the ITitle choice.  Maybe mention fmap.
+
+instance Functor src => Functor (Input src) where fmap = fmapO
+
+-- | Title (label) an input
+iTitle :: String -> Input src a -> Input src a
+iTitle = ITitle
+
+
+
 {----------------------------------------------------------
     Canonicalizers
 ----------------------------------------------------------}
 
 -- | Dissect a pair-valued input into two inputs.  Loses outer 'iTitle's.
--- Yields empty inputs when not a (possibly titled) pair-style input.
-asIPair :: Input (~>) (a,b) -> (Input (~>) a, Input (~>) b)
+-- Must be a (possibly titled) pair-style input.
+asIPair :: Input src (a,b) -> (Input src a, Input src b)
 asIPair (IPair  a b ) = (a,b)
 asIPair (ITitle _ ab) = asIPair ab
 asIPair i             = error ("asIPair of non-IPair "++show i)
@@ -72,49 +122,3 @@ asIPair i             = error ("asIPair of non-IPair "++show i)
 --                         , ITitle ("second of "++s) b )
 --  where
 --    (a,b) = asIPair ab
-
-
-{----------------------------------------------------------
-    Input functions
-----------------------------------------------------------}
-
--- The rest just rename the constructors.  Maybe eliminate.
--- Keep for now, since Haddock can't digest the constructor declarations.
-
-{-
--- | An empty (invisible) input for when we don't know what else to do.
--- Careful: this one probably yields bottom when used.
-iEmpty :: Input (~>) a
-iEmpty = IEmpty
--}
-
--- Alternatively, eliminate IEmpty and define
-
--- iEmpty = iPrim $ (~>) $ const $ error "cannot get value from empty input"
-
--- | Input primitive
-iPrim :: () ~> a -> Input (~>) a
-iPrim = IPrim
-
--- | Input a pair
-iPair :: Input (~>) a -> Input (~>) b -> Input (~>) (a,b)
-iPair = IPair
-
--- | Massage via an arrow value (generalizes fmap)
-iCompose :: Arrow (~>) => Input (~>) a -> a ~> b -> Input (~>) b
-IPrim put `iCompose` arr     = IPrim (put >>> arr)
-ITitle str ab `iCompose` arr = ITitle str (ab `iCompose` arr)
-i         `iCompose` _       = error ("iCompose given non-IPrim: "++show i)
-
--- Not sure about the ITitle choice
-
--- iCompose = ICompose
-
--- | Title (label) an input
-iTitle :: String -> Input (~>) a -> Input (~>) a
-iTitle = ITitle
-
-
--- | Handy specialization of 'iCompose'
-instance Arrow (~>) => Functor (Input (~>)) where
-  fmap f input = input `iCompose` pure f

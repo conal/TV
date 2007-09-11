@@ -31,7 +31,7 @@ import Interface.TV.Input (Input,iPrim)
 import Interface.TV.Present (Present(..))
 import Interface.TV.Common (CommonInsOuts(..))
 import Interface.TV.Tangible (RunTV,runTV)
-import Interface.TV.Misc (ToIO(..))
+-- import Interface.TV.Misc (ToIO(..))
 
 
 {----------------------------------------------------------

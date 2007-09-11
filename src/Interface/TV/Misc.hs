@@ -13,12 +13,11 @@
 -- Miscellaneous helpers
 ----------------------------------------------------------------------
 
+
 module Interface.TV.Misc
   (
-   readD, Cofunctor(..), ToIO(..), wrapF
+   -- readD {-, Cofunctor(..), ToIO(..), wrapF -}
   ) where
-
-import Control.Arrow (Arrow)
 
 -- | Read with default value.  If the input doesn't parse as a value of
 -- the expected type, or it's ambiguous, yield the default value.
@@ -26,17 +25,19 @@ readD :: Read a => a -> String -> a
 readD dflt str | [(a,"")] <- reads str = a
                | otherwise             = dflt
 
--- | Often useful for \"acceptors\" of values.
-class Cofunctor acceptor where
-  cofmap :: (a -> b) -> (acceptor b -> acceptor a)
+-- Cofunctor is in TypeCompose
 
--- | Arrows that convert to IO actions.
-class Arrow (~>) => ToIO (~>) where
-  -- Result type is restricted to () to allow arr types that yield more
-  -- (or fewer) than one value.
-  toIO :: () ~> () -> IO ()
+-- -- | Often useful for \"acceptors\" of values.
+-- class Cofunctor acceptor where
+--   cofmap :: (a -> b) -> (acceptor b -> acceptor a)
+
+-- -- | Arrows that convert to IO actions.
+-- class Arrow (~>) => ToIO (~>) where
+--   -- Result type is restricted to () to allow arr types that yield more
+--   -- (or fewer) than one value.
+--   toIO :: () ~> () -> IO ()
 
 -- | Handy wrapping pattern.  For instance, @wrapF show read@ turns a
 -- string function into value function.
-wrapF :: (c->d) -> (a->b) -> ((b->c) -> (a->d))
-wrapF after before f = after . f . before
+-- wrapF :: (c->d) -> (a->b) -> ((b->c) -> (a->d))
+-- wrapF after before f = after . f . before

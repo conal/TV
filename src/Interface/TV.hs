@@ -1,5 +1,3 @@
-{-# OPTIONS -fglasgow-exts #-}
-
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV
@@ -22,24 +20,14 @@ module Interface.TV
   , module Interface.TV.Output
   -- | Tangible values -- interface (output) and value, combined & separable
   , module Interface.TV.Tangible
-  -- | Convert inputs and outputs to arrow values
-  , module Interface.TV.Present
   -- | Output transformations, as a deep arrow.
   , module Interface.TV.OFun
   -- | Some common interaction vocabulary 
   , module Interface.TV.Common
   -- | Default inputs & outputs
   , module Interface.TV.Defaults
-  -- | Monadic TVs, via Kleisli arrows
-  , module Interface.TV.Kleisli
-  -- | IO-based instances of TV classes
+  -- | Support for IO-based TVs
   , module Interface.TV.IO
-  -- | Miscellaneous helpers
-  , module Interface.TV.Misc
-  -- | Re-exports from DeepArrow
-  , module Control.Arrow.DeepArrow
-  , module Data.FunArr
-
   ) where
 
 -- import Graphics.UI.Phooey (UI)
@@ -47,13 +35,7 @@ module Interface.TV
 import Interface.TV.Input
 import Interface.TV.Output
 import Interface.TV.Tangible
-import Interface.TV.Present
 import Interface.TV.OFun
 import Interface.TV.Common
 import Interface.TV.Defaults
-import Interface.TV.Kleisli
 import Interface.TV.IO
-import Interface.TV.Misc
-
-import Control.Arrow.DeepArrow
-import Data.FunArr

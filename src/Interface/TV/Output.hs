@@ -1,4 +1,8 @@
-{-# OPTIONS -fglasgow-exts -cpp #-}
+{-# LANGUAGE CPP #-}
+-- The GADTs language option isn't recognized, and -XGADTs doesn't seem to work, so
+
+{-# OPTIONS_GHC -fglasgow-exts #-}
+-- {-# OPTIONS_GHC -XGADTs #-}
 
 ----------------------------------------------------------------------
 -- |
@@ -8,7 +12,7 @@
 -- 
 -- Maintainer  :  conal@conal.net
 -- Stability   :  experimental
--- Portability :  portable
+-- Portability :  CPP, GADT
 -- 
 -- Outputs (interfaces) -- means of presenting values
 ----------------------------------------------------------------------
@@ -16,18 +20,25 @@
 module Interface.TV.Output
   (
   -- * Output data type
-    Output(..)
+    Output(..), output
   -- * Output functions
-  -- ** General
-  {-, oEmpty-}, oPrim, oLambda, oPair, oCompose, oTitle
+  -- ** Builders
+  , oPrim, oLambda, oPair, oTitle
   -- ** Canonicalizers
   , asOLambda, asOPair
+--   -- ** Type specialization
+--   , Output', oPrim'
   ) where
 
-import Control.Arrow
+
+import Control.Compose (Cofunctor(..))
+import Data.Pair (Pair(..))
+import Data.Lambda (Lambda(..))
+import Data.Title (Title_f(..))
+
 
 import Interface.TV.Input
-import Interface.TV.Misc (Cofunctor(..))
+
 
 
 {----------------------------------------------------------
@@ -37,25 +48,24 @@ import Interface.TV.Misc (Cofunctor(..))
 -- | An /Output/ describes a way to present a functional value, perhaps
 -- interactively.  It is the user-interface half of a tangible value.
 #ifdef __HADDOCK__
-data Output (~>) a
+data Output src snk a
 #else
-data Output (~>) :: * -> * where
-  -- When we don't know what output to use.  Removed that that error
-  -- messages will arise earlier.
-  -- OEmpty :: Output (~>) a
+data Output src snk :: * -> * where
   -- | Output primitive
-  OPrim :: a ~> () -> Output (~>) a
+  OPrim :: snk a -> Output src snk a
   -- | Visualize a function.  Akin to /lambda/
-  OLambda :: Input (~>)  a -> Output (~>) b -> Output (~>) (a->b)
+  OLambda :: Input src  a -> Output src snk b -> Output src snk (a->b)
   -- | Visualize a pair
-  OPair :: Output (~>) a -> Output (~>) b -> Output (~>) (a,b)
+  OPair :: Output src snk a -> Output src snk b -> Output src snk (a,b)
   -- | Massage via an arrow value (like cofmap)
-  -- OCompose :: a ~> b -> Output (~>) b -> Output (~>) a
+  -- OCompose :: src (a -> b) -> Output src snk b -> Output src snk a
   -- | Title/label an output
-  OTitle :: String -> Output (~>) a -> Output (~>) a
+  OTitle :: String -> Output src snk a -> Output src snk a
 #endif
 
-instance Show (Output (~>) a) where
+instance Title_f (Output src snk) where title_f = OTitle
+
+instance Show (Output src snk a) where
   -- show OEmpty          = "OEmpty"
   show (OPrim _)       = "(OPrim _)"
   show (OLambda i o)   = "(Lambda "++show i++" "++show o++")"
@@ -64,13 +74,24 @@ instance Show (Output (~>) a) where
   show (OTitle str o)  = "(OTitle "++show str++" "++show o++")"
 
 
+output :: (Pair src, Pair snk, Lambda src snk, Title_f src, Title_f snk) =>
+          Output src snk t -> snk t
+
+output (OPrim rant)   = rant
+output (OPair   a b)  = pair   (output a) (output b)
+output (OLambda i o)  = lambda (input  i) (output o)
+output (OTitle str t) = title_f str (output t)
+
+
+
+
 {----------------------------------------------------------
     Canonicalizers
 ----------------------------------------------------------}
 
 -- | Dissect a pair-valued input into two inputs.  Loses outer 'oTitle's.
--- Yields empty inputs when not a (possibly titled) pair-style input.
-asOLambda :: Output (~>) (a->b) -> (Input (~>) a, Output (~>) b)
+-- Must be a (possibly titled) pair-style input.
+asOLambda :: Output src snk (a->b) -> (Input src a, Output src snk b)
 asOLambda (OLambda a b) = (a,b)
 asOLambda (OTitle _ ab) = asOLambda ab
 asOLambda o             = error ("asOLambda of non-OLambda "++show o)
@@ -84,7 +105,7 @@ asOLambda o             = error ("asOLambda of non-OLambda "++show o)
 --  where
 --    (a,b) = asOLambda ab
 
-asOPair :: Output (~>) (a,b) -> (Output (~>) a, Output (~>) b)
+asOPair :: Output src snk (a,b) -> (Output src snk a, Output src snk b)
 asOPair (OPair  a b ) = (a,b)
 asOPair (OTitle _ ab) = asOPair ab
 asOPair o             = error ("asOPair of non-OPair "++show o)
@@ -106,43 +127,37 @@ asOPair o             = error ("asOPair of non-OPair "++show o)
 -- These functions just rename the constructors.  Maybe eliminate.
 -- Keep for now, since Haddock can't digest the constructor declarations.
 
-{-
--- | An empty (invisible) output for when we don't know what else to do.
-oEmpty :: Output (~>) a
-oEmpty = OEmpty
--}
-
--- Alternatively, eliminate OEmpty and define
-
--- oEmpty = oPrim (arr $ const ())
-
-
 -- | Output primitive
-oPrim :: a ~> () -> Output (~>) a
+oPrim :: snk a -> Output src snk a
 oPrim = OPrim
 
 -- | Visualize a function.  Akin to /lambda/
-oLambda :: Input (~>)  a -> Output (~>) b -> Output (~>) (a->b)
+oLambda :: Input src  a -> Output src snk b -> Output src snk (a->b)
 oLambda = OLambda
 
 -- | Visualize a pair
-oPair :: Output (~>) a -> Output (~>) b -> Output (~>) (a,b)
+oPair :: Output src snk a -> Output src snk b -> Output src snk (a,b)
 oPair = OPair
 
--- | Massage via an arrow value (like cofmap)
-oCompose :: Arrow (~>) => a ~> b -> Output (~>) b -> Output (~>) a
-arr `oCompose` OPrim put     = OPrim (arr >>> put)
-arr `oCompose` OTitle str ab = OTitle str (arr `oCompose` ab)
-_   `oCompose` o             = error ("oCompose given non-OPrim: "++show o)
 
--- Not sure about the OTitle choice
+instance Pair (Output src snk) where pair = oPair
 
--- oCompose = OCompose
+instance Lambda (Input src) (Output src snk) where lambda = oLambda
+
 
 -- | Title (label) an output
-oTitle :: String -> Output (~>) a -> Output (~>) a
+oTitle :: String -> Output src snk a -> Output src snk a
 oTitle = OTitle
 
--- | Handy specialization of 'oCompose'
-instance Arrow (~>) => Cofunctor (Output (~>)) where
-  cofmap f input = pure f `oCompose` input
+
+-- I specialized oCompose to cofmapO.  I don't think there's enough
+-- machinery to do oCompose.
+
+cofmapO :: Cofunctor snk => (a -> b) -> Output src snk b -> Output src snk a
+f `cofmapO` OPrim ranb    = OPrim (cofmap f ranb)
+f `cofmapO` OTitle str ab = OTitle str (f `cofmapO` ab)
+_ `cofmapO` o             = error ("cofmapO given non-OPrim: "++show o)
+
+instance Cofunctor snk => Cofunctor (Output src snk) where
+  cofmap = cofmapO
+

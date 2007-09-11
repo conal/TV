@@ -1,4 +1,4 @@
-{-# OPTIONS -fglasgow-exts #-}
+{-# LANGUAGE Rank2Types, TypeOperators #-}
 
 ----------------------------------------------------------------------
 -- |
@@ -8,7 +8,7 @@
 -- 
 -- Maintainer  :  conal@conal.net
 -- Stability   :  experimental
--- Portability :  portable
+-- Portability :  Rank2Types
 -- 
 -- Tangible values -- interface (output) and value, combined & separable
 ----------------------------------------------------------------------
@@ -16,45 +16,52 @@
 module Interface.TV.Tangible
   (
   -- * Tangible values
-   TV, tv, unTv, RunTV, runTV
+   TV, TVFun, tv, unTv, RunTV, runTV
   ) where
 
-import Control.Arrow
-import Control.Monad.Identity
+import Control.Compose (Id(..),(:*:)(..),(::*::)(..),Flip(..),ToOI(..))
+import Data.Pair
+import Data.Lambda
+import Data.Title
 
-import Data.Tupler
+-- import Data.Tupler
 import Interface.TV.Output
-import Interface.TV.Present
-import Interface.TV.Misc
+import Interface.TV.OFun
 
 -- import Control.Arrow.DeepArrow
 -- import Data.FunArr
 -- import Interface.TV.OFun 
 
 -- | Tangible values (TVs).
-type TV (~>) a = Pair1 (Output (~>)) Identity a
+type TV src snk = Output src snk :*: Id
+
+-- | Arrow on 'TV's
+type TVFun src snk = OFun src snk ::*:: (->)
+
 
 -- To do: use a newtype for TV, for friendlier messages.  Requires TVFun
 -- and FunArr instance below.  Unfortunately, GHC will not automatically
 -- derive the instances I'll need.
 
 -- -- | 'DeepArrow' corresponding to 'TV'
--- newtype TVFun (~>) a b = TVFun (Pair2 (OFun (~>)) (->) a b) deriving DeepArrow
+-- newtype TVFun src snk a b = TVFun (Pair2 (OFun src snk) (->) a b) deriving DeepArrow
 
--- instance FunArr (~>) => FunArr (TVFun (~>)) (TV (~>))
+-- instance FunArr src snk => FunArr (TVFun src snk) (TV src snk)
 
 -- | Make a 'TV'
-tv :: Output (~>) a -> a -> TV (~>) a
-tv o a = Pair1 (o, return a)
+tv :: Output src snk a -> a -> TV src snk a
+tv o a = Prod (o, Id a)
 
 -- | Dissect a 'TV'
-unTv :: TV (~>) a -> (Output (~>) a, a)
-unTv (Pair1 (o, ida)) = (o, runIdentity ida)
+unTv :: TV src snk a -> (Output src snk a, a)
+unTv (Prod (o, ida)) = (o, unId ida)
 
 -- | Useful to define disambiguating type-specializations of 'runTV'
-type RunTV (~>) = forall a. TV (~>) a -> IO ()
+type RunTV src snk = forall a. TV src snk a -> IO ()
 
 -- | Run a 'TV'
-runTV :: (ToIO (~>), Present (~>)) => RunTV (~>)
-runTV teevee = toIO (pure (const a) >>> present o)
+runTV :: ( Title_f snk, Title_f src
+         , Lambda src snk, Pair snk, Pair src
+         , ToOI snk) => RunTV src snk
+runTV teevee = unFlip (toOI (output o)) a
   where (o,a) = unTv teevee

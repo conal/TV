@@ -1,5 +1,3 @@
-{-# OPTIONS -fglasgow-exts #-}
-
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV.IO
@@ -10,16 +8,13 @@
 -- Stability   :  experimental
 -- Portability :  portable
 -- 
--- IO-based instances of TV classes 'PresentM', 'ToIOM', and
--- 'CommonInsOuts'
+-- Make IO play with TV
 ----------------------------------------------------------------------
 
 module Interface.TV.IO
   (
-  -- * Types
-   KIO
   -- * Inputs
-  , contentsIn, fileIn
+    contentsIn, fileIn
   -- * Outputs
   , interactOut, interactRS, fileOut
   -- * TVs
@@ -28,34 +23,21 @@ module Interface.TV.IO
   , runIO
   ) where
 
-import Control.Arrow
+-- import Control.Arrow
+
+import Control.Compose (OI,Flip(..))
+-- import Data.Title (Title_f)
+-- import Data.Fun (Fun)
+import Control.Instances () -- for Monoid/IO instance
 
 import Interface.TV.Input
 import Interface.TV.Output
 import Interface.TV.Tangible (tv,TV,RunTV,runTV)
-import Interface.TV.Kleisli
-import Interface.TV.Common
+import Interface.TV.Common (stringIn,stringOut,readShow)
 
 
--- | Convenient shorthand for 'Kleisli IO'
-type KIO = Kleisli IO
-
--- There's not much to do here, given Kleisli
-
-instance PresentM IO where
-  presentTitleM str io = putStr (str ++ suffix) >> io
-   where
-     suffix | null str              = ""
-            | last str `elem` ".?:" = " "
-            | otherwise             = ": "
-
-instance ToIOM IO where toIOM = id
-
-instance CommonInsOuts KIO where
-  putString = Kleisli putStrLn          -- or putStr?
-  getString = Kleisli (const getLine)
-
---  getInt    = getIntKIO
+-- There's not much left to do here, given the IO instances for Title,
+-- Pair & Fun, CommonIns, CommonOuts.
 
 {-
 
@@ -70,51 +52,56 @@ getIntKIO dflt (lo,hi) = getString >>> pure (check . readD dflt)
 
 -}
 
+
+
+
 {----------------------------------------------------------
     Inputs
 ----------------------------------------------------------}
 
 -- | 'Input' version of 'getContents'
-contentsIn :: Input KIO String
-contentsIn = kIn getContents
+contentsIn :: Input IO String
+contentsIn = iPrim getContents
 
 -- | 'Input' version of 'readFile'
-fileIn :: FilePath -> Input KIO String
-fileIn name = kIn (readFile name)
+fileIn :: FilePath -> Input IO String
+fileIn name = iPrim (readFile name)
 
 {----------------------------------------------------------
     Outputs
 ----------------------------------------------------------}
 
 -- | Equivalent of 'interact'.  See also 'Interface.TV.interactLine'
-interactOut :: Output KIO (String -> String)
+interactOut :: Output IO OI (String -> String)
 interactOut = oLambda contentsIn stringOut
 
 -- | Read+Show of 'interact'
 interactRS :: (Read a, Show b)
            => a                         -- ^ default, if read fails
-           -> Output KIO (a -> b)
+           -> Output IO OI (a -> b)
+
 interactRS = readShow interactOut
 
 -- | 'Output' version of 'writeFile'
-fileOut :: FilePath -> Output KIO String
-fileOut name = kOut (writeFile name)
-
+fileOut :: FilePath -> Output IO OI String
+fileOut name = oPrim (Flip (writeFile name))
 
 {----------------------------------------------------------
     TVs
 ----------------------------------------------------------}
 
-fromFile :: FilePath -> TV KIO (String->String)
+-- | Identity function, with 'fileIn' and 'stringOut'
+fromFile :: FilePath -> TV IO OI (String->String)
 fromFile name = tv (oLambda (fileIn name) stringOut) id
 
-toFile :: FilePath -> TV KIO (String->String)
-toFile name = tv (oLambda stringIn (fileOut name)) id
+-- | Identity function, with stringIn' and 'fileOut'
+toFile :: FilePath -> TV IO OI (String->String)
+toFile name = tv (oLambda (stringIn "") (fileOut name)) id
 
 {----------------------------------------------------------
     Disambiguator
 ----------------------------------------------------------}
 
 -- | Type-disambiguating alias for 'runTV'
-runIO :: RunTV KIO
+runIO :: RunTV IO OI
 runIO = runTV

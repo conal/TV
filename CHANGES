@@ -1,28 +1,47 @@
-Version 0.2:
-* Simplified exports in src/Interface/TV.hs.  Now just exports by module
-  rather than by entity.  Also re-export DeepArrow modules.
-* Moved GUI functionality out to a new package "GuiTV".  Removed
-  dependency on Phooey and (indirectly) wxHaskell, as the latter can be
-  difficult to install.
+% [TV](http://haskell.org/haskellwiki/TV) changes
 
-Version 0.1.1:
-* Changed all files to *nix-style line endings.
+## Version 0.3 ##
 
-Version 0.1:
-* Removed iEmpty & iEmpty and corresponding constructors. Generate dynamic
-  errors earlier rather than later.
-* Removed ICompose & OCompose constructors.  Redefined iCompose and
-  oCompose (and consequently fmap on inputs and cofmap on outputs) to work
-  only on (possibly titled) primitives.  I don't know how to implement the
-  DeepArrow algebra with OCompose.
-* Added wrapO and wrapAO, sort of analogous (or dual) to wrapF.  I'm not
-  sure the name is a great choice.  I've also considered "unwrapO".
-* Added readShow, defined via wrapO.
-* Redefined interactRSOut via readShow and renamed "interactLineRS".
-  Added "interactRS".
-* Added fromFile & toFile TV functions.
-* Added fileOut
-* Moved Grading example from src/Examples.hs to src/Grading.hs
-* Added "short lines" example to src/Examples.hs.
-* Added type alias RunTV for defining types of runTV specializations, such
-  as runUI and runIO.
++  Overhauled to integrate with [Eros](http://haskell.org/haskellwiki/Eros)
++  Eliminated arrows, in favor of [applicative
+   functors](http://haskell.org/haskellwiki/Applicative_functor).  Now
+   [Input](src/Interface/TV/Input.hs) takes a type (constructor) parameters:
+   `src`, and [Output](src/Interface/TV/Output.hs) takes two type
+   (constructor) parameters: `src` & `snk`.
++  Using `LANGUAGE` pragma in place of most `OPTIONS`
+
+## Version 0.2 ##
+
++  Simplified exports in [TV.hs](src/Interface/TV.hs).  Now just exports by module
+   rather than by entity.  Also re-export [DeepArrow] modules.
++  Moved GUI functionality out to a new package [GuiTV].  Removed
+   dependency on [Phooey] and (indirectly) [wxHaskell], as the latter can
+   be difficult to install. 
+
+## Version 0.1.1 ##
+
++  Changed all files to *nix-style line endings.
+
+## Version 0.1 ##
+
++  Removed iEmpty & oEmpty and corresponding constructors. Generate dynamic
+   errors earlier rather than later.
++  Removed ICompose & OCompose constructors.  Redefined iCompose and
+   oCompose (and consequently fmap on inputs and cofmap on outputs) to work
+   only on (possibly titled) primitives.  I don't know how to implement the
+   DeepArrow algebra with OCompose.
++  Added wrapO and wrapAO, sort of analogous (or dual) to wrapF.  I'm not
+   sure the name is a great choice.  I've also considered "unwrapO".
++  Added readShow, defined via wrapO.
++  Redefined interactRSOut via readShow and renamed "interactLineRS".
+   Added "interactRS".
++  Added fromFile & toFile TV functions.
++  Added fileOut
++  Moved Grading example from src/Examples.hs to src/Grading.hs
++  Added "short lines" example to src/Examples.hs.
++  Added type alias RunTV for defining types of runTV specializations, such
+   as runUI and runIO.
+
+[GuiTV]:      http://haskell.org/haskellwiki/GuiTV
+[Phooey]:     http://haskell.org/haskellwiki/Phooey
+[wxHaskell]:  http://haskell.org/haskellwiki/wxHaskell
