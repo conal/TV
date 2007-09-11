@@ -1,8 +1,7 @@
-{-# LANGUAGE CPP #-}
--- The GADTs language option isn't recognized, and -XGADTs doesn't seem to work, so
+{-# LANGUAGE GADTs #-}
 
+-- The GADTs language option doesn't seem work, so
 {-# OPTIONS_GHC -fglasgow-exts #-}
--- {-# OPTIONS_GHC -XGADTs #-}
 
 
 ----------------------------------------------------------------------
@@ -13,7 +12,7 @@
 -- 
 -- Maintainer  :  conal@conal.net
 -- Stability   :  experimental
--- Portability :  CPP, GADT
+-- Portability :  GADTs
 -- 
 -- Inputs -- means of obtaining values
 ----------------------------------------------------------------------
@@ -38,9 +37,6 @@ import Data.Title (Title_f(..))
 
 -- | An /Input/ describes a way to obtain a functional value from a user.
 -- Used in Output for making function visualizations.
-#ifdef __HADDOCK__
-data Input src a
-#else
 data Input src :: * -> * where
   -- | Input primitive
   IPrim :: src a -> Input src a
@@ -50,7 +46,6 @@ data Input src :: * -> * where
   -- ICompose :: Input src a -> src (a -> b) -> Input src b
   -- | Title/label an input
   ITitle :: String -> Input src a -> Input src a
-#endif
 
 instance Title_f (Input src) where title_f = iTitle
 

@@ -1,8 +1,7 @@
-{-# LANGUAGE CPP #-}
--- The GADTs language option isn't recognized, and -XGADTs doesn't seem to work, so
+{-# LANGUAGE GADTs #-}
 
+-- The GADTs language option doesn't seem work, so
 {-# OPTIONS_GHC -fglasgow-exts #-}
--- {-# OPTIONS_GHC -XGADTs #-}
 
 ----------------------------------------------------------------------
 -- |
@@ -12,7 +11,7 @@
 -- 
 -- Maintainer  :  conal@conal.net
 -- Stability   :  experimental
--- Portability :  CPP, GADT
+-- Portability :  GADTs
 -- 
 -- Outputs (interfaces) -- means of presenting values
 ----------------------------------------------------------------------
@@ -47,9 +46,6 @@ import Interface.TV.Input
 
 -- | An /Output/ describes a way to present a functional value, perhaps
 -- interactively.  It is the user-interface half of a tangible value.
-#ifdef __HADDOCK__
-data Output src snk a
-#else
 data Output src snk :: * -> * where
   -- | Output primitive
   OPrim :: snk a -> Output src snk a
@@ -61,7 +57,6 @@ data Output src snk :: * -> * where
   -- OCompose :: src (a -> b) -> Output src snk b -> Output src snk a
   -- | Title/label an output
   OTitle :: String -> Output src snk a -> Output src snk a
-#endif
 
 instance Title_f (Output src snk) where title_f = OTitle
 

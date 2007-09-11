@@ -27,7 +27,6 @@ Stability:	     experimental
 Hs-Source-Dirs:      src
 Build-Depends:       base, DeepArrow, TypeCompose >= 0.2
 tested-with:	     GHC==6.6
-Extensions:          CPP
 Exposed-Modules:     
                      Interface.TV
                      Interface.TV.Input

@@ -47,8 +47,8 @@ testO = oLambda (fileIn "test.txt") defaultOut
 
 -- Apply a function on the lines or on the words of a string.
 onLines, onWords :: ([String] -> [String]) -> (String -> String)
-onLines = (unlines.) . (.lines)
-onWords = (unwords.) . (.words)
+onLines f = unlines . f . lines
+onWords f = unwords . f . words
 
 perLine,perWord :: (String -> String) -> (String -> String)
 perLine f = onLines (map f)
