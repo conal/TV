@@ -1,4 +1,7 @@
-{-# LANGUAGE Rank2Types, TypeOperators, TypeSynonymInstances, PatternGuards, FlexibleInstances #-}
+-- {-# LANGUAGE Rank2Types, TypeOperators, TypeSynonymInstances,
+-- PatternGuards, FlexibleInstances #-}
+-- Temp, for ghc 6.6 compatibility
+{-# OPTIONS -fglasgow-exts #-}
 
 ----------------------------------------------------------------------
 -- |

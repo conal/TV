@@ -1,4 +1,7 @@
-{-# LANGUAGE OverlappingInstances, UndecidableInstances, IncoherentInstances, FlexibleContexts #-}
+-- {-# LANGUAGE OverlappingInstances, UndecidableInstances,
+-- IncoherentInstances, FlexibleContexts #-}
+-- Temp, for ghc 6.6 compatibility
+{-# OPTIONS -fglasgow-exts #-}
 
 ---- Some TV examples.  See also GuiTV.
 
