@@ -2,7 +2,7 @@
 -- TypeSynonymInstances, FlexibleInstances, UndecidableInstances,
 -- IncoherentInstances #-}
 -- Temp, for ghc 6.6 compatibility
-{-# OPTIONS -fglasgow-exts #-}
+{-# OPTIONS -fglasgow-exts -fallow-overlapping-instances -fallow-incoherent-instances #-}
 
 ----------------------------------------------------------------------
 -- |
