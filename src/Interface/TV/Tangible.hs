@@ -1,6 +1,6 @@
--- {-# LANGUAGE Rank2Types, TypeOperators #-}
--- Temp, for ghc 6.6 compatibility
-{-# OPTIONS -fglasgow-exts #-}
+{-# LANGUAGE Rank2Types, TypeOperators #-}
+-- For ghc 6.6 compatibility
+-- {-# OPTIONS -fglasgow-exts #-}
 
 ----------------------------------------------------------------------
 -- |

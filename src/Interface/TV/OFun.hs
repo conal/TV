@@ -1,6 +1,6 @@
--- {-# LANGUAGE MultiParamTypeClasses #-}
--- Temp, for ghc 6.6 compatibility
-{-# OPTIONS -fglasgow-exts #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+-- For ghc 6.6 compatibility
+-- {-# OPTIONS -fglasgow-exts #-}
 
 ----------------------------------------------------------------------
 -- |

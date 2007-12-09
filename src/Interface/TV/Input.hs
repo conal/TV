@@ -1,9 +1,6 @@
--- {-# LANGUAGE GADTs #-}
--- Temp, for ghc 6.6 compatibility
-{-# OPTIONS -fglasgow-exts #-}
-
--- The GADTs language option doesn't seem work, so
-{-# OPTIONS_GHC -fglasgow-exts #-}
+{-# LANGUAGE GADTs, KindSignatures #-}
+-- For ghc 6.6 compatibility
+-- {-# OPTIONS -fglasgow-exts #-}
 
 
 ----------------------------------------------------------------------
