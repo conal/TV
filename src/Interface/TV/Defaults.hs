@@ -8,7 +8,7 @@
 -- |
 -- Module      :  Interface.TV.Defaults
 -- Copyright   :  (c) Conal Elliott 2006
--- License     :  LGPL
+-- License     :  BSD3
 -- 
 -- Maintainer  :  conal@conal.net
 -- Stability   :  experimental
