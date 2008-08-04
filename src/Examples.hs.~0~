@@ -1,5 +1,7 @@
 {-# LANGUAGE OverlappingInstances, UndecidableInstances
-           , IncoherentInstances, FlexibleContexts #-}
+           , IncoherentInstances, FlexibleContexts 
+           , FlexibleInstances
+           #-}
 -- For ghc 6.6 compatibility
 -- {-# OPTIONS -fglasgow-exts #-}
 
