@@ -27,6 +27,7 @@ Stability:	     experimental
 Hs-Source-Dirs:      src
 Build-Depends:       base, DeepArrow, TypeCompose >= 0.2
 tested-with:	     GHC==6.6
+build-type:	     Simple
 Exposed-Modules:     
                      Interface.TV
                      Interface.TV.Input
@@ -38,4 +39,4 @@ Exposed-Modules:
                      Interface.TV.Defaults
 Extra-Source-Files:  
                      Examples
-ghc-options:         -O -W
+ghc-options:         -W

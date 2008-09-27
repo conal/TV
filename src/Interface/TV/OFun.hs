@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE MultiParamTypeClasses, CPP #-}
 -- For ghc 6.6 compatibility
 -- {-# OPTIONS -fglasgow-exts #-}
 
@@ -17,7 +17,16 @@
 
 module Interface.TV.OFun (OX,OFun, wrapO{-,wrapAO-}) where
 
+#if __GLASGOW_HASKELL__ >= 609
+import Control.Category
+import Prelude hiding ((.), id)
+#endif
+
 import Control.Arrow
+#if __GLASGOW_HASKELL__ < 610
+                      hiding (pure)
+#endif
+
 
 import Control.Compose (Cofunctor(..))
 
@@ -36,14 +45,22 @@ newtype OFun dom ran a b = OFun (OX dom ran a b)
 
 -- TODO: consider generalizing from "->" in IFun?
 
+#if __GLASGOW_HASKELL__ >= 609
+instance Category (OFun dom ran) where
+  id              = OFun id
+  OFun g . OFun f = OFun (g . f)
+#endif
+
+
 instance Arrow (OFun dom ran) where
   -- (a->b) -> OFun dom ran a b
   arr = error "Interface.TV.OFun: no 'arr' method"
         -- We could use the following definition instead.
         -- const $ OFun (const OEmpty)
 
-  -- OFun dom ran a b -> OFun dom ran b c -> OFun dom ran a c
+#if __GLASGOW_HASKELL__ < 609
   OFun f >>> OFun g = OFun (f >>> g)
+#endif
 
   -- OFun dom ran a a' -> OFun dom ran (a,b) (a',b)
   first (OFun f) = OFun (firstO f)
