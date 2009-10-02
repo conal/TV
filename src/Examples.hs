@@ -1,8 +1,7 @@
 {-# LANGUAGE OverlappingInstances, UndecidableInstances
-           , IncoherentInstances, FlexibleContexts #-}
--- For ghc 6.6 compatibility
--- {-# OPTIONS -fglasgow-exts #-}
-
+           , IncoherentInstances, FlexibleContexts 
+           , FlexibleInstances
+           #-}
 ---- Some TV examples.  See also GuiTV.
 
 module Examples where
@@ -10,6 +9,7 @@ module Examples where
 import Data.List (sort)
 import Control.Compose (cofmap,OI)
 import Control.Arrow.DeepArrow ((->|))
+import Data.FunArr
 
 -- TypeCompose
 import Data.Title
@@ -33,14 +33,17 @@ reverseT = tv (title "reverse" defaultOut) reverse
 -- GHC wants to use the [a] rather than the String instances of DefaultIn
 -- and DefaultOut.  I thought the rule is most specific instance wins.
 
---  This one reverses twice
-revTwice :: CTV (String -> String)
-revTwice = reverseT ->| reverseT
+-- --  This one reverses twice
+-- revTwice :: CTV (String -> String)
+-- revTwice = reverseT ->| reverseT
 
 -- Same problem with more general type:
 --   revTwice :: (Read a, Show a, CommonIns src, CommonOuts snk) =>
 --               TV src snk ([a] -> [a])
 
+-- I'm getting a type error even with the more specifically-typed
+-- revTwice.  "Could not deduce (FunArr ...)".  Is it a bug in
+-- type-checking with mutual dependencies?   Investigate.
 
 
 ---- IO examples

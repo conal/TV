@@ -1,7 +1,4 @@
 {-# LANGUAGE GADTs, KindSignatures, MultiParamTypeClasses #-}
--- For ghc 6.6 compatibility
--- {-# OPTIONS -fglasgow-exts #-}
-
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV.Output

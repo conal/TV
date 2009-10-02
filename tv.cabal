@@ -39,4 +39,4 @@ Exposed-Modules:
                      Interface.TV.Defaults
 Extra-Source-Files:  
                      Examples
-ghc-options:         -W
+ghc-options:         -Wall

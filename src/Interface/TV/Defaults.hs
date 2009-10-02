@@ -1,8 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses, OverlappingInstances
            , TypeSynonymInstances, FlexibleInstances, UndecidableInstances
            , IncoherentInstances #-}
--- For ghc 6.6 compatibility
--- {-# OPTIONS -fglasgow-exts -fallow-overlapping-instances -fallow-incoherent-instances #-}
 
 ----------------------------------------------------------------------
 -- |

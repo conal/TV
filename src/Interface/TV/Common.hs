@@ -1,7 +1,5 @@
 {-# LANGUAGE Rank2Types, TypeOperators, TypeSynonymInstances,
     PatternGuards, FlexibleInstances #-}
--- For ghc 6.6 compatibility
--- {-# OPTIONS -fglasgow-exts #-}
 
 ----------------------------------------------------------------------
 -- |

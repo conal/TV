@@ -1,8 +1,4 @@
 {-# LANGUAGE GADTs, KindSignatures #-}
--- For ghc 6.6 compatibility
--- {-# OPTIONS -fglasgow-exts #-}
-
-
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV.Input

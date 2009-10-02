@@ -1,7 +1,4 @@
 {-# LANGUAGE Rank2Types, TypeOperators #-}
--- For ghc 6.6 compatibility
--- {-# OPTIONS -fglasgow-exts #-}
-
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV.Tangible
