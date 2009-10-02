@@ -1,5 +1,5 @@
 Name:                TV
-Version:             0.4
+Version:             0.4.2
 Synopsis:	     Tangible Values -- composable interfaces
 Category:            Interfaces
 Description:
@@ -25,7 +25,7 @@ Copyright:           (c) 2006 by Conal Elliott
 License:             BSD3
 Stability:	     experimental
 Hs-Source-Dirs:      src
-Build-Depends:       base, DeepArrow, TypeCompose >= 0.2
+Build-Depends:       base<5, DeepArrow, TypeCompose >= 0.2
 tested-with:	     GHC==6.6
 build-type:	     Simple
 Exposed-Modules:     
