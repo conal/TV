@@ -83,7 +83,7 @@ output (OTitle str t) = title_f str (output t)
     Canonicalizers
 ----------------------------------------------------------}
 
--- | Dissect a pair-valued input into two inputs.  Loses outer 'oTitle's.
+-- | Dissect a function-valued output into input & output.  Loses outer 'oTitle's.
 -- Must be a (possibly titled) pair-style input.
 asOLambda :: Output src snk (a->b) -> (Input src a, Output src snk b)
 asOLambda (OLambda a b) = (a,b)
