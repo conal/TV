@@ -82,7 +82,7 @@ instance CommonOuts OI where { putString = Flip putStrLn; putShow = putShowC }
 class CommonOuts snk where
   -- | Output a string
   putString :: snk String
-  -- | Shows based outout.  Define as 'putReadC' when @snk@ is a
+  -- | Shows based outout.  Define as 'putShowC' when @snk@ is a
   -- 'Cofunctor'
   putShow :: Show a => snk a
   -- | Output a bool
