@@ -53,7 +53,7 @@ tv o a = Prod (o, Id a)
 
 -- | Dissect a 'TV'
 unTv :: TV src snk a -> (Output src snk a, a)
-unTv (Prod (o, ida)) = (o, unId ida)
+unTv (Prod (o, Id a)) = (o, a)
 
 -- | Useful to define disambiguating type-specializations of 'runTV'
 type RunTV src snk = forall a. TV src snk a -> IO ()
