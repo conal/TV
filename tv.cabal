@@ -1,5 +1,5 @@
 Name:                TV
-Version:             0.4.3
+Version:             0.4.4
 Synopsis:	     Tangible Values -- composable interfaces
 Category:            Interfaces
 Description:
@@ -20,7 +20,7 @@ Description:
 Author:              Conal Elliott 
 Maintainer:          conal@conal.net
 Homepage:            http://haskell.org/haskellwiki/TV
-Package-Url:	     http://darcs.haskell.org/packages/TV
+Package-Url:	     http://code.haskell.org/~conal/code/TV
 Copyright:           (c) 2006,2009 by Conal Elliott
 License:             BSD3
 Stability:	     experimental
