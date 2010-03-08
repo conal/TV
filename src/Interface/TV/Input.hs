@@ -55,7 +55,7 @@ instance Show (Input src a) where
 
 input :: (Pair src, Title_f src) => Input src t -> src t
 
-input (IPrim ft)     = ft
+input (IPrim src)    = src
 input (IPair a b)    = input a `pair` input b
 input (ITitle str t) = title_f str (input t)
 

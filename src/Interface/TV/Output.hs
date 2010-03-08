@@ -68,7 +68,7 @@ instance Show (Output src snk a) where
 output :: (Pair src, Pair snk, Lambda src snk, Title_f src, Title_f snk) =>
           Output src snk t -> snk t
 
-output (OPrim rant)   = rant
+output (OPrim snk)    = snk
 output (OPair   a b)  = pair   (output a) (output b)
 output (OLambda i o)  = lambda (input  i) (output o)
 output (OTitle str t) = title_f str (output t)
