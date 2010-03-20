@@ -57,8 +57,8 @@ type RunTV src snk = forall a. TV src snk a -> IO ()
 runTV :: ( Title_f snk, Title_f src
          , Lambda src snk, Pair snk, Pair src
          , ToOI snk) => RunTV src snk
-runTV teevee = unFlip (toOI (output o)) a
-  where (o,a) = unTv teevee
+runTV tval = unFlip (toOI (output o)) a
+  where (o,a) = unTv tval
 
 
 {-
@@ -83,7 +83,7 @@ newtype TVFun' src snk a b = TVFun' ((OFun src snk ::*:: (->)) a b)
 -- So give a manual definition:
 
 instance FunArr (TVFun' src snk) (TV' src snk) where
-  toArr (TV' teevee) = TVFun' (toArr teevee)
+  toArr (TV' tval) = TVFun' (toArr tval)
   TVFun' f $$ TV' wa = TV' (f $$ wa)
 
 -- Then names (TV/TV' & TVFun/TVFun')
