@@ -1,4 +1,6 @@
 {-# LANGUAGE Rank2Types, TypeOperators #-}
+-- For the TV & TVFun newtypes:
+-- {-# LANGUAGE GeneralizedNewtypeDeriving, MultiParamTypeClasses #-}
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV.Tangible
@@ -27,25 +29,18 @@ import Data.Title
 import Interface.TV.Output
 import Interface.TV.OFun
 
--- import Control.Arrow.DeepArrow
--- import Data.FunArr
--- import Interface.TV.OFun 
+-- -- For the TV & TVFun newtypes:
+-- 
+-- import Control.Category (Category)
+-- import Control.Arrow (Arrow)
+-- import Control.Arrow.DeepArrow (DeepArrow)
+-- import Data.FunArr (FunArr(..))
 
 -- | Tangible values (TVs).
 type TV src snk = Output src snk :*: Id
 
 -- | Arrow on 'TV's
 type TVFun src snk = OFun src snk ::*:: (->)
-
-
--- To do: use a newtype for TV, for friendlier messages.  Requires TVFun
--- and FunArr instance below.  Unfortunately, GHC will not automatically
--- derive the instances I'll need.
-
--- -- | 'DeepArrow' corresponding to 'TV'
--- newtype TVFun src snk a b = TVFun (Pair2 (OFun src snk) (->) a b) deriving DeepArrow
-
--- instance FunArr src snk => FunArr (TVFun src snk) (TV src snk)
 
 -- | Make a 'TV'
 tv :: Output src snk a -> a -> TV src snk a
@@ -64,3 +59,33 @@ runTV :: ( Title_f snk, Title_f src
          , ToOI snk) => RunTV src snk
 runTV teevee = unFlip (toOI (output o)) a
   where (o,a) = unTv teevee
+
+
+{-
+
+{--------------------------------------------------------------------
+    TV and TVFun newtypes
+--------------------------------------------------------------------}
+
+-- To do: use a newtype for TV, for friendlier messages, as follows.
+-- Type-checks as of 2010-03-20.
+
+newtype TV' src snk a = TV' (TV src snk a)
+
+-- | 'DeepArrow' corresponding to 'TV'
+newtype TVFun' src snk a b = TVFun' ((OFun src snk ::*:: (->)) a b)
+  deriving (Category, Arrow, DeepArrow)
+
+-- GHC isn't up for:
+-- 
+--     deriving instance FunArr (TVFun src snk) (TV src snk)
+-- 
+-- So give a manual definition:
+
+instance FunArr (TVFun' src snk) (TV' src snk) where
+  toArr (TV' teevee) = TVFun' (toArr teevee)
+  TVFun' f $$ TV' wa = TV' (f $$ wa)
+
+-- Then names (TV/TV' & TVFun/TVFun')
+
+-}
