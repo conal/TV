@@ -30,7 +30,7 @@ import Control.Compose (Cofunctor(..))
 
 import Data.FunArr
 import Control.Arrow.DeepArrow
-#if __GLASGOW_HASKELL__ >= 609
+#if __GLASGOW_HASKELL__ >= 609 && __GLASGOW_HASKELL__ < 612
 import Control.Category
 import Prelude hiding ((.), id)
 #endif
