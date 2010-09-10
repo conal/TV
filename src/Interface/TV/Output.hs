@@ -42,17 +42,24 @@ import Interface.TV.Input
 
 -- | An /Output/ describes a way to present a functional value, perhaps
 -- interactively.  It is the user-interface half of a tangible value.
+-- The constructors: primitive, function, pairing, and title.
 data Output src snk :: * -> * where
-  -- | Output primitive
+  -- -- | Output primitive
   OPrim :: snk a -> Output src snk a
-  -- | Visualize a function.  Akin to /lambda/
+  -- -- | Visualize a function.  Akin to /lambda/
   OLambda :: Input src  a -> Output src snk b -> Output src snk (a->b)
-  -- | Visualize a pair
+  -- -- | Visualize a pair
   OPair :: Output src snk a -> Output src snk b -> Output src snk (a,b)
-  -- | Massage via an arrow value (like cofmap)
+  -- -- | Massage via an arrow value (like cofmap)
   -- OCompose :: src (a -> b) -> Output src snk b -> Output src snk a
-  -- | Title/label an output
+  -- -- | Title/label an output
   OTitle :: String -> Output src snk a -> Output src snk a
+
+
+-- As of 2010-09-10, Haddock still doesn't support doc comments for GADT
+-- constructors.  See <http://trac.haskell.org/haddock/ticket/43>.
+-- When that bug gets fixed, fix the doc strings above.
+
 
 instance Title_f (Output src snk) where title_f = OTitle
 

@@ -31,16 +31,23 @@ import Data.Title (Title_f(..))
 ----------------------------------------------------------}
 
 -- | An /Input/ describes a way to obtain a functional value from a user.
--- Used in Output for making function visualizations.
+-- Used in @Output@ for making function visualizations.
+-- The constructors: primitive, pairing, and title.
 data Input src :: * -> * where
-  -- | Input primitive
+  -- -- | Input primitive
   IPrim :: src a -> Input src a
-  -- | Input a pair
+  -- -- | Input a pair
   IPair :: Input src a -> Input src b -> Input src (a,b)
-  -- | Massage via an arrow value (generalizes fmap)
+  -- -- | Massage via an arrow value (generalizes fmap)
   -- ICompose :: Input src a -> src (a -> b) -> Input src b
-  -- | Title/label an input
+  -- -- | Title/label an input
   ITitle :: String -> Input src a -> Input src a
+
+
+-- As of 2010-09-10, Haddock still doesn't support doc comments for GADT
+-- constructors.  See <http://trac.haskell.org/haddock/ticket/43>.
+-- When that bug gets fixed, fix the doc strings above.
+
 
 instance Title_f (Input src) where title_f = iTitle
 
