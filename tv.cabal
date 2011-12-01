@@ -39,5 +39,5 @@ Exposed-Modules:
                      Interface.TV.IO
                      Interface.TV.Defaults
 Extra-Source-Files:  
-                     Examples
+                     Examples.hs
 ghc-options:         -Wall
