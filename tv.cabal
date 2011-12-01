@@ -23,6 +23,7 @@ Homepage:            http://haskell.org/haskellwiki/TV
 Package-Url:	     http://code.haskell.org/~conal/code/TV
 Copyright:           (c) 2006,2009 by Conal Elliott
 License:             BSD3
+License-File:        COPYING
 Stability:	     experimental
 Hs-Source-Dirs:      src
 Build-Depends:       base<5, DeepArrow>=0.3.1, TypeCompose >= 0.6.7
