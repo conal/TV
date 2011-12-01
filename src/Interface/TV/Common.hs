@@ -28,7 +28,7 @@ module Interface.TV.Common
 -- import Control.Arrow
 -- import Control.Applicative
 
-import Control.Compose (OI,Flip(..),Cofunctor(..))
+import Control.Compose (OI,Flip(..),ContraFunctor(..))
 
 import Interface.TV.Input
 import Interface.TV.Output
@@ -83,14 +83,14 @@ class CommonOuts snk where
   -- | Output a string
   putString :: snk String
   -- | Shows based outout.  Define as 'putShowC' when @snk@ is a
-  -- 'Cofunctor'
+  -- 'ContraFunctor'
   putShow :: Show a => snk a
   -- | Output a bool
   putBool :: snk Bool
   putBool = putShow
 
-putShowC :: (CommonOuts snk, Cofunctor snk, Show a) => snk a
-putShowC = cofmap show putString
+putShowC :: (CommonOuts snk, ContraFunctor snk, Show a) => snk a
+putShowC = contraFmap show putString
 
 -- | Inputs that work over all 'CommonInsOuts' typecons.
 type CInput a = forall src. (CommonIns src) => Input src a
@@ -132,7 +132,7 @@ boolOut = oPrim putBool
 
 -- | Output a showable value
 showOut :: Show a => COutput a
-showOut = oPrim putShow -- cofmap show stringOut
+showOut = oPrim putShow -- contraFmap show stringOut
 
 -- | 'Output' version of 'interact'.  Well, not quite, since the IO
 -- version uses 'getLine' instead of 'getContents'.  See also
@@ -142,7 +142,7 @@ interactLine s = oLambda (stringIn s) stringOut
 
 -- | Handy Read+Show wrapper
 readShow :: ( Read a, Show b, CommonIns src, CommonOuts snk
-            , Functor src, Cofunctor snk )
+            , Functor src, ContraFunctor snk )
          => Output src snk (String->String) -- ^ base output
          -> a                            -- ^ default, when read fails
          -> Output src snk (a -> b)
@@ -165,6 +165,6 @@ interactLineRS :: ( Read a, Show a, Show b, CommonIns src, CommonOuts snk )
 
 interactLineRS dflt = oLambda (readIn dflt) showOut
 
--- This version requires Functor src & Cofunctor snk
+-- This version requires Functor src & ContraFunctor snk
 --  interactLineRS a = readShow (interactLine (show a)) a
 

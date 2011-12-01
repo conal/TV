@@ -26,7 +26,7 @@ import Control.Arrow
 #endif
 
 
-import Control.Compose (Cofunctor(..))
+import Control.Compose (ContraFunctor(..))
 
 import Data.FunArr
 import Control.Arrow.DeepArrow
@@ -183,9 +183,9 @@ uncurryO o = OLambda (IPair a b) c
 
 -- | Like @wrapF@, but for outputs and reversed orientation.
 -- Specialization of 'wrapAO'.
-wrapO :: (Functor dom, Cofunctor ran) =>
+wrapO :: (Functor dom, ContraFunctor ran) =>
          (b'->b) -> (a->a') -> OX dom ran (a->b) (a'->b')
-wrapO outer inner ab = OLambda (fmap inner ia) (cofmap outer ob)
+wrapO outer inner ab = OLambda (fmap inner ia) (contraFmap outer ob)
  where
    (ia,ob) = asOLambda ab
 

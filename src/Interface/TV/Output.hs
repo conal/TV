@@ -26,7 +26,7 @@ module Interface.TV.Output
   ) where
 
 
-import Control.Compose (Cofunctor(..))
+import Control.Compose (ContraFunctor(..))
 import Data.Pair (Pair(..))
 import Data.Lambda (Lambda(..))
 import Data.Title (Title_f(..))
@@ -50,7 +50,7 @@ data Output src snk :: * -> * where
   OLambda :: Input src  a -> Output src snk b -> Output src snk (a->b)
   -- -- | Visualize a pair
   OPair :: Output src snk a -> Output src snk b -> Output src snk (a,b)
-  -- -- | Massage via an arrow value (like cofmap)
+  -- -- | Massage via an arrow value (like contraFmap)
   -- OCompose :: src (a -> b) -> Output src snk b -> Output src snk a
   -- -- | Title/label an output
   OTitle :: String -> Output src snk a -> Output src snk a
@@ -148,14 +148,14 @@ oTitle :: String -> Output src snk a -> Output src snk a
 oTitle = OTitle
 
 
--- I specialized oCompose to cofmapO.  I don't think there's enough
+-- I specialized oCompose to contraFmapO.  I don't think there's enough
 -- machinery to do oCompose.
 
-cofmapO :: Cofunctor snk => (a -> b) -> Output src snk b -> Output src snk a
-f `cofmapO` OPrim ranb    = OPrim (cofmap f ranb)
-f `cofmapO` OTitle str ab = OTitle str (f `cofmapO` ab)
-_ `cofmapO` o             = error ("cofmapO given non-OPrim: "++show o)
+contraFmapO :: ContraFunctor snk => (a -> b) -> Output src snk b -> Output src snk a
+f `contraFmapO` OPrim ranb    = OPrim (contraFmap f ranb)
+f `contraFmapO` OTitle str ab = OTitle str (f `contraFmapO` ab)
+_ `contraFmapO` o             = error ("contraFmapO given non-OPrim: "++show o)
 
-instance Cofunctor snk => Cofunctor (Output src snk) where
-  cofmap = cofmapO
+instance ContraFunctor snk => ContraFunctor (Output src snk) where
+  contraFmap = contraFmapO
 
