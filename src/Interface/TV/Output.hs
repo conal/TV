@@ -44,15 +44,15 @@ import Interface.TV.Input
 -- interactively.  It is the user-interface half of a tangible value.
 -- The constructors: primitive, function, pairing, and title.
 data Output :: (* -> *) -> (* -> *) -> * -> * where
-  -- | Output primitive
+  -- -- | Output primitive
   OPrim :: snk a -> Output src snk a
-  -- | Visualize a function.  Akin to /lambda/
+  -- -- | Visualize a function.  Akin to /lambda/
   OLambda :: Input src  a -> Output src snk b -> Output src snk (a->b)
-  -- | Visualize a pair
+  -- -- | Visualize a pair
   OPair :: Output src snk a -> Output src snk b -> Output src snk (a,b)
   -- -- | Massage via an arrow value (like contraFmap)
   -- OCompose :: src (a -> b) -> Output src snk b -> Output src snk a
-  -- | Title/label an output
+  -- -- | Title/label an output
   OTitle :: String -> Output src snk a -> Output src snk a
 
 
