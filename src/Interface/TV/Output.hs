@@ -25,16 +25,12 @@ module Interface.TV.Output
 --   , Output', oPrim'
   ) where
 
-
 import Control.Compose (ContraFunctor(..))
 import Data.Pair (Pair(..))
 import Data.Lambda (Lambda(..))
 import Data.Title (Title_f(..))
 
-
 import Interface.TV.Input
-
-
 
 {----------------------------------------------------------
     Output data type
