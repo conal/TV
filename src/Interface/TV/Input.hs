@@ -2,7 +2,7 @@
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV.Input
--- Copyright   :  (c) Conal Elliott 2007
+-- Copyright   :  (c) Conal Elliott 2007-2013
 -- License     :  BSD3
 -- 
 -- Maintainer  :  conal@conal.net
@@ -33,14 +33,14 @@ import Data.Title (Title_f(..))
 -- | An /Input/ describes a way to obtain a functional value from a user.
 -- Used in @Output@ for making function visualizations.
 -- The constructors: primitive, pairing, and title.
-data Input src :: * -> * where
-  -- -- | Input primitive
+data Input :: (* -> *) -> * -> * where
+  -- | Input primitive
   IPrim :: src a -> Input src a
-  -- -- | Input a pair
+  -- | Input a pair
   IPair :: Input src a -> Input src b -> Input src (a,b)
   -- -- | Massage via an arrow value (generalizes fmap)
   -- ICompose :: Input src a -> src (a -> b) -> Input src b
-  -- -- | Title/label an input
+  -- | Title/label an input
   ITitle :: String -> Input src a -> Input src a
 
 

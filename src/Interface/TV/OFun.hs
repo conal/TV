@@ -1,9 +1,9 @@
-{-# LANGUAGE MultiParamTypeClasses, CPP #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# OPTIONS -fno-warn-orphans #-}
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV.OFun
--- Copyright   :  (c) Conal Elliott 2006
+-- Copyright   :  (c) Conal Elliott 2006-2013
 -- License     :  BSD3
 -- 
 -- Maintainer  :  conal@conal.net
@@ -15,25 +15,15 @@
 
 module Interface.TV.OFun (OX,OFun, wrapO{-,wrapAO-}) where
 
-#if __GLASGOW_HASKELL__ >= 609
 import Control.Category
 import Prelude hiding ((.), id)
-#endif
 
 import Control.Arrow
-#if __GLASGOW_HASKELL__ < 610
-                      hiding (pure)
-#endif
-
 
 import Control.Compose (ContraFunctor(..))
 
 import Data.FunArr
 import Control.Arrow.DeepArrow
-#if __GLASGOW_HASKELL__ >= 609 && __GLASGOW_HASKELL__ < 612
-import Control.Category
-import Prelude hiding ((.), id)
-#endif
 
 import Interface.TV.Output
 import Interface.TV.Input
@@ -47,21 +37,15 @@ newtype OFun dom ran a b = OFun (OX dom ran a b)
 
 -- TODO: consider generalizing from "->" in IFun?
 
-#if __GLASGOW_HASKELL__ >= 609
 instance Category (OFun dom ran) where
-  id              = idA
+  id              = OFun id
   OFun g . OFun f = OFun (g . f)
-#endif
 
 instance Arrow (OFun dom ran) where
   -- (a->b) -> OFun dom ran a b
   arr = error "Interface.TV.OFun: no 'arr' method"
         -- We could use the following definition instead.
         -- const $ OFun (const OEmpty)
-#if __GLASGOW_HASKELL__ < 609
-  -- OFun dom ran a b -> OFun dom ran b c -> OFun dom ran a c
-  OFun f >>> OFun g = OFun (f >>> g)
-#endif
 
   -- OFun dom ran a a' -> OFun dom ran (a,b) (a',b)
   first (OFun f) = OFun (firstO f)
@@ -74,7 +58,6 @@ instance Arrow (OFun dom ran) where
   f &&& g = dupA >>> f *** g
 
 instance DeepArrow (OFun dom ran) where
-  idA      = OFun id
   dupA     = postFun "dup" dupO
   fstA     = postFun "first half" fstO
   sndA     = postFun "second half" sndO

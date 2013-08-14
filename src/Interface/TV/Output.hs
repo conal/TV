@@ -2,7 +2,7 @@
 ----------------------------------------------------------------------
 -- |
 -- Module      :  Interface.TV.Output
--- Copyright   :  (c) Conal Elliott 2006
+-- Copyright   :  (c) Conal Elliott 2006-2013
 -- License     :  BSD3
 -- 
 -- Maintainer  :  conal@conal.net
@@ -43,16 +43,16 @@ import Interface.TV.Input
 -- | An /Output/ describes a way to present a functional value, perhaps
 -- interactively.  It is the user-interface half of a tangible value.
 -- The constructors: primitive, function, pairing, and title.
-data Output src snk :: * -> * where
-  -- -- | Output primitive
+data Output :: (* -> *) -> (* -> *) -> * -> * where
+  -- | Output primitive
   OPrim :: snk a -> Output src snk a
-  -- -- | Visualize a function.  Akin to /lambda/
+  -- | Visualize a function.  Akin to /lambda/
   OLambda :: Input src  a -> Output src snk b -> Output src snk (a->b)
-  -- -- | Visualize a pair
+  -- | Visualize a pair
   OPair :: Output src snk a -> Output src snk b -> Output src snk (a,b)
   -- -- | Massage via an arrow value (like contraFmap)
   -- OCompose :: src (a -> b) -> Output src snk b -> Output src snk a
-  -- -- | Title/label an output
+  -- | Title/label an output
   OTitle :: String -> Output src snk a -> Output src snk a
 
 
