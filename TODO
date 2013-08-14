@@ -1,6 +1,0 @@
-                            To-do items for TV
-
-* Track down the horizontal fill problem that shows up with example tv4.  This is really a problem with Phooey, that I hadn't previousy noticed.  See ui3 in phooey/src/Examples.hs. See if Eros handles it correctly.
-
-* Reconsider some of the differences between Phooey & TV:
-** islider has dynamic bounds in Phooey and static in TV.
